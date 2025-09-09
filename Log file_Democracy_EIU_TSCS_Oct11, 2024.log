@@ -1,0 +1,736 @@
+--------------------------------------------------------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  C:\Users\Muinul\Google Drive\Muinul\00_DISSERTATION\00_DISSERTATION_final\Supplemental Materials_Original\Log
+>  file_Empirical Analysis_Final Version\Log file_Democracy_EIU_TSCS_Oct11,2020.log
+  log type:  text
+ opened on:  11 Oct 2020, 16:57:14
+
+. use "C:\Users\Muinul\Desktop\muinul.democracy.dta", clear
+
+. 
+. global id c_code
+
+. 
+. global t year
+
+. 
+. sort $id $t
+
+. 
+. xtset $id $t, yearly
+       panel variable:  c_code (unbalanced)
+        time variable:  year, 1789 to 2020, but with gaps
+                delta:  1 year
+
+. 
+. xtdescribe
+
+  c_code:  1, 2, ..., 397                                    n =        397
+    year:  1789, 1790, ..., 2020                             T =        232
+           Delta(year) = 1 year
+           Span(year)  = 232 periods
+           (c_code*year uniquely identifies each observation)
+
+Distribution of T_i:   min      5%     25%       50%       75%     95%     max
+                         5      46      61        76       121     232     232
+
+     Freq.  Percent    Cum. |  Pattern*
+ ---------------------------+---------------------------------------------------------------------------------------------
+> --------------------------
+       71     17.88   17.88 |  .....................................................................................122222
+> 2222222222222222222222222
+       50     12.59   30.48 |  .......................................................122222222222222222222222222222222222
+> 2222222222222222222222222
+       37      9.32   39.80 |  2222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222
+> 2222222222222222222222222
+       20      5.04   44.84 |  ...........................................................................................
+> 122222222222222222222221.
+       17      4.28   49.12 |  ...........................................................................................
+> 122222222222222222222222.
+       12      3.02   52.14 |  .....................................................................................122222
+> 222222222222222222222222.
+        9      2.27   54.41 |  .....12222222222222222222222222222222222222222222222222222222222222222222222222222222222222
+> 222222222222222222222222.
+        4      1.01   55.42 |  ........................1222222222222222222222222222222222222222222222222222222222222222222
+> 2222222222222222222222222
+        4      1.01   56.42 |  222222222222222222222222222222222222222221.................................................
+> .........................
+      173     43.58  100.00 | (other patterns)
+ ---------------------------+---------------------------------------------------------------------------------------------
+> --------------------------
+      397    100.00         |  XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+> XXXXXXXXXXXXXXXXXXXXXXXXX
+ -------------------------------------------------------------------------------------------------------------------------
+> --------------------------
+ *Each column represents 2 periods.
+
+
+. 
+. * ln CO2 per capita
+
+. 
+. gen lnco2pc = log(co2pc)
+(30936 missing values generated)
+
+. 
+. * ln GDP per capita
+
+. 
+. gen lngdppc = log(gdppc)
+(36137 missing values generated)
+
+. 
+. * GDP per capita squared
+
+. 
+. gen lngdppc2 = lngdppc*lngdppc
+(36137 missing values generated)
+
+. 
+. * ln Population, Total
+
+. 
+. gen lnpop = log(pop)
+(28445 missing values generated)
+
+. 
+. rename DemocracyindexEIU demEIU
+
+. 
+. drop if missing(co2pc)
+(30935 observations deleted)
+
+. 
+. drop if missing(lngdppc)
+(5929 observations deleted)
+
+. 
+. drop if missing(trade)
+(329 observations deleted)
+
+. 
+. drop if missing(pop)
+(0 observations deleted)
+
+. 
+. drop if missing(urban)
+(9 observations deleted)
+
+. 
+. drop if missing(renew)
+(201 observations deleted)
+
+. 
+. drop if missing(forest)
+(100 observations deleted)
+
+. 
+. drop if missing(annexI)
+(416 observations deleted)
+
+. 
+. drop if missing(island)
+(0 observations deleted)
+
+. 
+. drop if missing(latitude)
+(22 observations deleted)
+
+. 
+. drop if missing(fedfof)
+(0 observations deleted)
+
+. 
+. drop if missing(demEIU)
+(2644 observations deleted)
+
+. 
+. xtreg co2pc demEIU lngdppc trade pop urban renew forest annexI island latitude, re vce (cluster c_code)
+
+Random-effects GLS regression                   Number of obs      =      1507
+Group variable: c_code                          Number of groups   =       153
+
+R-sq:  within  = 0.0759                         Obs per group: min =         3
+       between = 0.5060                                        avg =       9.8
+       overall = 0.4958                                        max =        10
+
+                                                Wald chi2(10)      =    194.17
+corr(u_i, X)   = 0 (assumed)                    Prob > chi2        =    0.0000
+
+                               (Std. Err. adjusted for 153 clusters in c_code)
+------------------------------------------------------------------------------
+             |               Robust
+       co2pc |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+      demEIU |  -.0198448   .0119995    -1.65   0.098    -.0433634    .0036739
+     lngdppc |   2.391945   .5276883     4.53   0.000     1.357695    3.426195
+       trade |  -.0040456   .0032179    -1.26   0.209    -.0103525    .0022613
+         pop |  -2.18e-09   1.68e-09    -1.30   0.195    -5.48e-09    1.12e-09
+       urban |  -.0308838   .0191644    -1.61   0.107    -.0684454    .0066777
+       renew |  -.0511471   .0101126    -5.06   0.000    -.0709673   -.0313268
+      forest |  -.0256533   .0144643    -1.77   0.076    -.0540029    .0026964
+      annexI |   1.052363    1.13616     0.93   0.354    -1.174469    3.279195
+      island |   .2421879    1.17708     0.21   0.837    -2.064847    2.549223
+    latitude |  -.0417616   .2706504    -0.15   0.877    -.5722266    .4887034
+       _cons |  -11.56077   3.931373    -2.94   0.003    -19.26611   -3.855417
+-------------+----------------------------------------------------------------
+     sigma_u |  3.9191859
+     sigma_e |  .91923144
+         rho |  .94785645   (fraction of variance due to u_i)
+------------------------------------------------------------------------------
+
+. 
+. predict e, e
+
+. 
+. predict u, u
+
+. 
+. predict ue, ue  
+
+. 
+. kdensity e, norm
+
+. 
+. kdensity u, norm
+
+. 
+. kdensity ue, norm
+
+. 
+. pnorm e
+
+. 
+. pnorm u
+
+. 
+. pnorm ue
+
+. 
+. qnorm e
+
+. 
+. qnorm u
+
+. 
+. qnorm ue, mlabel(countryname)
+
+. 
+. predict e1 if countryname!="Qatar", e
+(10 missing values generated)
+
+. 
+. predict u1 if countryname!="Qatar", u
+(10 missing values generated)
+
+. 
+. predict ue1 if countryname!="Qatar", ue
+(10 missing values generated)
+
+. 
+. kdensity e1 if countryname!="Qatar", norm
+
+. 
+. kdensity u1 if countryname!="Qatar", norm
+
+. 
+. kdensity ue1 if countryname!="Qatar", norm
+
+. 
+. pnorm e1 if countryname!="Qatar"
+
+. 
+. pnorm u1 if countryname!="Qatar"
+
+. 
+. pnorm ue1 if countryname!="Qatar"
+
+. 
+. qnorm e1 if countryname!="Qatar"
+
+. 
+. qnorm u1 if countryname!="Qatar"
+
+. 
+. qnorm ue1 if countryname!="Qatar", mlabel(countryname)
+
+. 
+. reg co2pc demEIU lngdppc trade pop urban renew forest annexI island latitude
+
+      Source |       SS       df       MS              Number of obs =    1507
+-------------+------------------------------           F( 10,  1496) =  224.03
+       Model |  34751.2659    10  3475.12659           Prob > F      =  0.0000
+    Residual |  23205.8889  1496  15.5119578           R-squared     =  0.5996
+-------------+------------------------------           Adj R-squared =  0.5969
+       Total |  57957.1548  1506  38.4841665           Root MSE      =  3.9385
+
+------------------------------------------------------------------------------
+       co2pc |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+      demEIU |    -.10116   .0063987   -15.81   0.000    -.1137113   -.0886087
+     lngdppc |   4.340959   .2064431    21.03   0.000      3.93601    4.745907
+       trade |   .0004247   .0021474     0.20   0.843    -.0037875    .0046369
+         pop |   1.27e-09   6.90e-10     1.84   0.066    -8.61e-11    2.62e-09
+       urban |   .0244928   .0082397     2.97   0.003     .0083302    .0406555
+       renew |    .012412   .0058245     2.13   0.033     .0009869    .0238371
+      forest |  -.0405838    .005442    -7.46   0.000    -.0512586   -.0299091
+      annexI |   .3644684   .3530495     1.03   0.302    -.3280563    1.056993
+      island |   .5807118   .3445874     1.69   0.092    -.0952139    1.256638
+    latitude |   .0154005   .1455286     0.11   0.916    -.2700613    .3008623
+       _cons |  -30.55738   1.718579   -17.78   0.000    -33.92846    -27.1863
+------------------------------------------------------------------------------
+
+. 
+. lvr2plot, mlabel(countryname)
+
+. xtline co2pc if demEIU>=90, overlay
+
+. graph save Graph "C:\Users\Muinul\Google Drive\Muinul\00_DISSERTATION\00_DISSERTATION_final\Supplemental Materials_Origi
+> nal\Graphs\Democracy_EIU_top 10 percent democracy line.gph"
+(file C:\Users\Muinul\Google Drive\Muinul\00_DISSERTATION\00_DISSERTATION_final\Supplemental Materials_Original\Graphs\Dem
+> ocracy_EIU_top 10 percent democracy line.gph saved)
+
+. xtline co2pc if demEIU<=10, overlay
+no observations
+r(2000);
+
+. xtline co2pc if demEIU<=20, overlay
+
+. graph save Graph "C:\Users\Muinul\Google Drive\Muinul\00_DISSERTATION\00_DISSERTATION_final\Supplemental Materials_Origi
+> nal\Graphs\Democracy_EIU_bottom 20 percent democracy line.gph"
+(file C:\Users\Muinul\Google Drive\Muinul\00_DISSERTATION\00_DISSERTATION_final\Supplemental Materials_Original\Graphs\Dem
+> ocracy_EIU_bottom 20 percent democracy line.gph saved)
+
+. reg co2pc demEIU lngdppc trade if countryname!="Qatar", robust
+
+Linear regression                                      Number of obs =    1497
+                                                       F(  3,  1493) =  476.75
+                                                       Prob > F      =  0.0000
+                                                       R-squared     =  0.6059
+                                                       Root MSE      =   3.317
+
+------------------------------------------------------------------------------
+             |               Robust
+       co2pc |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+      demEIU |  -.0748263   .0074614   -10.03   0.000    -.0894622   -.0601904
+     lngdppc |   3.999239   .1454777    27.49   0.000     3.713877    4.284601
+       trade |   .0023645   .0024076     0.98   0.326    -.0023581     .007087
+       _cons |  -28.34997   .9429535   -30.07   0.000    -30.19962   -26.50031
+------------------------------------------------------------------------------
+
+. 
+. outreg2 using output_co2EIU1, dec(3) excel label alpha(0.001, 0.01, 0.05, 0.1) symbol(***, **, *, ^) addtext(Year FE, No
+> ) ctitle(Model 1: OLS) drop(i.year) replace
+output_co2EIU1.xml
+dir : seeout
+
+. xtreg co2pc demEIU lngdppc trade i.year if countryname!="Qatar", fe
+
+Fixed-effects (within) regression               Number of obs      =      1497
+Group variable: c_code                          Number of groups   =       152
+
+R-sq:  within  = 0.2051                         Obs per group: min =         3
+       between = 0.5337                                        avg =       9.8
+       overall = 0.5264                                        max =        10
+
+                                                F(12,1333)         =     28.65
+corr(u_i, Xb)  = -0.1380                        Prob > F           =    0.0000
+
+------------------------------------------------------------------------------
+       co2pc |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+      demEIU |   .0059011   .0057782     1.02   0.307    -.0054343    .0172365
+     lngdppc |   3.633386   .2294127    15.84   0.000     3.183337    4.083436
+       trade |  -.0067645   .0014315    -4.73   0.000    -.0095728   -.0039561
+             |
+        year |
+       2007  |  -.1434597   .0780889    -1.84   0.066    -.2966501    .0097307
+       2008  |  -.1872619    .079248    -2.36   0.018    -.3427262   -.0317976
+       2009  |  -.4302351   .0786527    -5.47   0.000    -.5845317   -.2759384
+       2010  |  -.3860106   .0796419    -4.85   0.000    -.5422478   -.2297735
+       2011  |  -.4778355   .0810961    -5.89   0.000    -.6369255   -.3187456
+       2012  |  -.5404768   .0832041    -6.50   0.000    -.7037021   -.3772515
+       2013  |  -.6568285   .0845257    -7.77   0.000    -.8226465   -.4910105
+       2014  |   -.858018   .0863056    -9.94   0.000    -1.027328   -.6887085
+       2015  |  -1.002761   .0881878   -11.37   0.000    -1.175763   -.8297586
+             |
+       _cons |  -28.26104   2.097009   -13.48   0.000    -32.37483   -24.14724
+-------------+----------------------------------------------------------------
+     sigma_u |   3.606421
+     sigma_e |  .66651069
+         rho |  .96697251   (fraction of variance due to u_i)
+------------------------------------------------------------------------------
+F test that all u_i=0:     F(151, 1333) =   234.24           Prob > F = 0.0000
+
+. xtreg co2pc demEIU lngdppc trade i.year if countryname!="Qatar", vce(cluster c_code)  
+
+Random-effects GLS regression                   Number of obs      =      1497
+Group variable: c_code                          Number of groups   =       152
+
+R-sq:  within  = 0.2026                         Obs per group: min =         3
+       between = 0.5524                                        avg =       9.8
+       overall = 0.5450                                        max =        10
+
+                                                Wald chi2(12)      =    175.19
+corr(u_i, X)   = 0 (assumed)                    Prob > chi2        =    0.0000
+
+                               (Std. Err. adjusted for 152 clusters in c_code)
+------------------------------------------------------------------------------
+             |               Robust
+       co2pc |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+      demEIU |  -.0054379   .0088057    -0.62   0.537    -.0226967    .0118209
+     lngdppc |   3.534543   .4580095     7.72   0.000     2.636861    4.432225
+       trade |  -.0061185   .0032391    -1.89   0.059     -.012467      .00023
+             |
+        year |
+       2007  |  -.1378713   .0552691    -2.49   0.013    -.2461967   -.0295458
+       2008  |  -.1780599   .0702315    -2.54   0.011    -.3157112   -.0404086
+       2009  |   -.419215   .0785499    -5.34   0.000    -.5731699     -.26526
+       2010  |  -.3791851   .0832884    -4.55   0.000    -.5424273   -.2159429
+       2011  |  -.4680895   .0896213    -5.22   0.000    -.6437441   -.2924349
+       2012  |  -.5254704   .1006425    -5.22   0.000    -.7227262   -.3282146
+       2013  |  -.6372268   .1295614    -4.92   0.000    -.8911624   -.3832911
+       2014  |    -.83516   .1471602    -5.68   0.000    -1.123589   -.5467313
+       2015  |  -.9743072   .1596956    -6.10   0.000    -1.287305   -.6613096
+             |
+       _cons |  -26.77582   3.689241    -7.26   0.000     -34.0066   -19.54504
+-------------+----------------------------------------------------------------
+     sigma_u |      3.269
+     sigma_e |  .66651069
+         rho |  .96008871   (fraction of variance due to u_i)
+------------------------------------------------------------------------------
+
+. 
+. outreg2 using output_co2EIU1, dec(3) excel label alpha(0.001, 0.01, 0.05, 0.1) symbol(***, **, *, ^) addtext(Year FE, Ye
+> s) ctitle(Model 1: GLS, Random) drop(i.year) append
+output_co2EIU1.xml
+dir : seeout
+
+. xtpcse co2pc demEIU lngdppc trade i.year if countryname!="Qatar", corr(ar1) pairwise 
+(note: estimates of rho outside [-1,1] bounded to be in the range [-1,1])
+(note: at least one disturbance covariance assumed 0, no common time periods
+       between panels)
+
+Prais-Winsten regression, correlated panels corrected standard errors (PCSEs)
+
+Group variable:   c_code                        Number of obs      =      1497
+Time variable:    year                          Number of groups   =       152
+Panels:           correlated (unbalanced)       Obs per group: min =         3
+Autocorrelation:  common AR(1)                                 avg =  9.848684
+Sigma computed by pairwise selection                           max =        10
+Estimated covariances      =     11628          R-squared          =    0.5039
+Estimated autocorrelations =         1          Wald chi2(11)      =  26558.22
+Estimated coefficients     =        13          Prob > chi2        =    0.0000
+
+------------------------------------------------------------------------------
+             |           Panel-corrected
+       co2pc |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+      demEIU |  -.0445167   .0088244    -5.04   0.000    -.0618122   -.0272212
+     lngdppc |   3.608762   .1797743    20.07   0.000      3.25641    3.961113
+       trade |  -.0002644   .0022128    -0.12   0.905    -.0046014    .0040726
+             |
+        year |
+       2007  |  -.1430014   .0091084   -15.70   0.000    -.1608535   -.1251493
+       2008  |  -.1876678   .0148874   -12.61   0.000    -.2168465    -.158489
+       2009  |  -.3786268   .0163164   -23.21   0.000    -.4106064   -.3466472
+       2010  |  -.3826987   .0155812   -24.56   0.000    -.4132373   -.3521601
+       2011  |  -.4844073   .0198799   -24.37   0.000    -.5233712   -.4454433
+       2012  |  -.5376437   .0241037   -22.31   0.000    -.5848861   -.4904012
+       2013  |  -.6359771   .0251468   -25.29   0.000     -.685264   -.5866903
+       2014  |  -.8254738    .027596   -29.91   0.000    -.8795609   -.7713867
+       2015  |  -.9454165   .0295773   -31.96   0.000    -1.003387   -.8874461
+             |
+       _cons |  -25.77983   1.498361   -17.21   0.000    -28.71657    -22.8431
+-------------+----------------------------------------------------------------
+         rho |   .9329149
+------------------------------------------------------------------------------
+
+. 
+. outreg2 using output_co2EIU1, dec(3) excel label alpha(0.001, 0.01, 0.05, 0.1) symbol(***, **, *, ^) ctitle(Model 1: PCS
+> E) drop(i.year) append
+output_co2EIU1.xml
+dir : seeout
+
+. xtscc co2pc demEIU lngdppc trade i.year if countryname!="Qatar", re lag(4) 
+(10 missing values generated)
+
+Regression with Driscoll-Kraay standard errors   Number of obs     =      1497
+Method: Random-effects GLS regression            Number of groups  =       152
+Group variable (i): c_code                       Wald chi2(12)     =1583376.62
+maximum lag: 4                                   Prob > chi2       =    0.0000
+corr(u_i, Xb) = 0 (assumed)                      overall R-squared =    0.5450
+
+------------------------------------------------------------------------------
+             |             Drisc/Kraay
+       co2pc |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+      demEIU |  -.0054379   .0095828    -0.57   0.584    -.0271156    .0162398
+     lngdppc |   3.534543   .4223289     8.37   0.000     2.579169    4.489917
+       trade |  -.0061185   .0018979    -3.22   0.010     -.010412   -.0018251
+             |
+        year |
+       2006  |          0  (empty)
+       2007  |  -.1378713   .0210513    -6.55   0.000    -.1854926     -.09025
+       2008  |  -.1780599   .0343404    -5.19   0.001    -.2557432   -.1003766
+       2009  |   -.419215   .0236181   -17.75   0.000    -.4726429   -.3657871
+       2010  |  -.3791851   .0313919   -12.08   0.000    -.4501985   -.3081717
+       2011  |  -.4680895   .0446427   -10.49   0.000    -.5690783   -.3671008
+       2012  |  -.5254704   .0588418    -8.93   0.000    -.6585797   -.3923611
+       2013  |  -.6372268   .0674056    -9.45   0.000    -.7897087   -.4847448
+       2014  |    -.83516   .0758665   -11.01   0.000    -1.006782   -.6635382
+       2015  |  -.9743072   .0841099   -11.58   0.000    -1.164577   -.7840373
+             |
+       _cons |  -26.77582   4.388129    -6.10   0.000    -36.70246   -16.84918
+-------------+----------------------------------------------------------------
+     sigma_u |      3.269
+     sigma_e |  .66651069
+         rho |  .96008871   (fraction of variance due to u_i)
+------------------------------------------------------------------------------
+
+
+. 
+. outreg2 using output_co2EIU1, dec(3) excel label alpha(0.001, 0.01, 0.05, 0.1) symbol(***, **, *, ^) addtext(Year FE, Ye
+> s) ctitle(Model 1: XTSCC) drop(i.year) append
+output_co2EIU1.xml
+dir : seeout
+
+. reg co2pc demEIU lngdppc trade pop urban renew forest annexI island latitude if countryname!="Qatar", robust
+
+Linear regression                                      Number of obs =    1497
+                                                       F(  9,  1486) =       .
+                                                       Prob > F      =       .
+                                                       R-squared     =  0.6318
+                                                       Root MSE      =  3.2135
+
+------------------------------------------------------------------------------
+             |               Robust
+       co2pc |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+      demEIU |   -.079324   .0064834   -12.23   0.000    -.0920416   -.0666065
+     lngdppc |   3.393344   .2051896    16.54   0.000     2.990852    3.795836
+       trade |   .0027604   .0026239     1.05   0.293    -.0023865    .0079072
+         pop |   1.49e-09   3.00e-10     4.97   0.000     9.02e-10    2.08e-09
+       urban |    .020087   .0058197     3.45   0.001     .0086712    .0315028
+       renew |  -.0021028   .0044485    -0.47   0.637    -.0108287    .0066232
+      forest |  -.0275381   .0040599    -6.78   0.000    -.0355018   -.0195744
+      annexI |   1.118152   .2976317     3.76   0.000      .534329    1.701975
+      island |   .7887127   .3198886     2.47   0.014     .1612314    1.416194
+    latitude |   .0815812   .0937756     0.87   0.384    -.1023655    .2655278
+       _cons |  -23.47771   1.645789   -14.27   0.000    -26.70603   -20.24939
+------------------------------------------------------------------------------
+
+. 
+. outreg2 using output_co2EIU2, dec(3) excel label alpha(0.001, 0.01, 0.05, 0.1) symbol(***, **, *, ^) addtext(Year FE, No
+> ) ctitle(Model 2: OLS) drop(i.year) replace
+output_co2EIU2.xml
+dir : seeout
+
+. xtreg co2pc demEIU lngdppc trade pop urban renew forest annexI island latitude i.year if countryname!="Qatar", fe
+note: annexI omitted because of collinearity
+note: island omitted because of collinearity
+note: latitude omitted because of collinearity
+
+Fixed-effects (within) regression               Number of obs      =      1497
+Group variable: c_code                          Number of groups   =       152
+
+R-sq:  within  = 0.2359                         Obs per group: min =         3
+       between = 0.5557                                        avg =       9.8
+       overall = 0.5493                                        max =        10
+
+                                                F(16,1329)         =     25.65
+corr(u_i, Xb)  = -0.4847                        Prob > F           =    0.0000
+
+------------------------------------------------------------------------------
+       co2pc |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+      demEIU |  -.0017091   .0057851    -0.30   0.768    -.0130581    .0096399
+     lngdppc |   3.262146   .2359761    13.82   0.000     2.799219    3.725072
+       trade |  -.0059099   .0014116    -4.19   0.000    -.0086791   -.0031407
+         pop |  -1.44e-09   3.97e-09    -0.36   0.716    -9.22e-09    6.34e-09
+       urban |   .0631536   .0185914     3.40   0.001     .0266818    .0996253
+       renew |  -.0354038   .0062955    -5.62   0.000     -.047754   -.0230536
+      forest |  -.0021463   .0202426    -0.11   0.916    -.0418572    .0375646
+      annexI |          0  (omitted)
+      island |          0  (omitted)
+    latitude |          0  (omitted)
+             |
+        year |
+       2007  |  -.1684723   .0769134    -2.19   0.029    -.3193572   -.0175875
+       2008  |  -.2226902   .0788871    -2.82   0.005    -.3774471   -.0679334
+       2009  |  -.4769856   .0798123    -5.98   0.000    -.6335574   -.3204138
+       2010  |  -.4545802   .0826741    -5.50   0.000    -.6167662   -.2923941
+       2011  |  -.5779324   .0861277    -6.71   0.000    -.7468935   -.4089712
+       2012  |  -.6558804      .0906    -7.24   0.000     -.833615   -.4781458
+       2013  |  -.7728872   .0950023    -8.14   0.000    -.9592581   -.5865163
+       2014  |  -.9890698   .0996592    -9.92   0.000    -1.184576   -.7935633
+       2015  |  -1.157637   .1043162   -11.10   0.000    -1.362279   -.9529947
+             |
+       _cons |  -26.65743   2.551694   -10.45   0.000    -31.66321   -21.65164
+-------------+----------------------------------------------------------------
+     sigma_u |  3.9993867
+     sigma_e |  .65441764
+         rho |  .97392357   (fraction of variance due to u_i)
+------------------------------------------------------------------------------
+F test that all u_i=0:     F(151, 1329) =   230.69           Prob > F = 0.0000
+
+. xtreg co2pc demEIU lngdppc trade pop urban renew forest annexI island latitude i.year if countryname!="Qatar", vce(clust
+> er c_code)
+
+Random-effects GLS regression                   Number of obs      =      1497
+Group variable: c_code                          Number of groups   =       152
+
+R-sq:  within  = 0.2310                         Obs per group: min =         3
+       between = 0.5822                                        avg =       9.8
+       overall = 0.5750                                        max =        10
+
+                                                Wald chi2(19)      =    242.36
+corr(u_i, X)   = 0 (assumed)                    Prob > chi2        =    0.0000
+
+                               (Std. Err. adjusted for 152 clusters in c_code)
+------------------------------------------------------------------------------
+             |               Robust
+       co2pc |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+      demEIU |  -.0091185   .0078394    -1.16   0.245    -.0244834    .0062464
+     lngdppc |   3.007413   .5825509     5.16   0.000     1.865635    4.149192
+       trade |   -.005809   .0033167    -1.75   0.080    -.0123096    .0006917
+         pop |   5.83e-10   9.54e-10     0.61   0.541    -1.29e-09    2.45e-09
+       urban |   .0231382   .0203987     1.13   0.257    -.0168425    .0631189
+       renew |  -.0329563   .0084263    -3.91   0.000    -.0494716    -.016441
+      forest |  -.0259993   .0112586    -2.31   0.021    -.0480659   -.0039328
+      annexI |  -.4455497   1.131157    -0.39   0.694    -2.662577    1.771477
+      island |   .1289398    1.07202     0.12   0.904    -1.972181    2.230061
+    latitude |  -.3503331   .2983951    -1.17   0.240    -.9351767    .2345105
+             |
+        year |
+       2007  |  -.1416761   .0557261    -2.54   0.011    -.2508972    -.032455
+       2008  |  -.1751718    .071747    -2.44   0.015    -.3157933   -.0345502
+       2009  |  -.4220239   .0761162    -5.54   0.000    -.5712089    -.272839
+       2010  |  -.3818051   .0889726    -4.29   0.000    -.5561882    -.207422
+       2011  |   -.484185   .1001079    -4.84   0.000    -.6803929   -.2879772
+       2012  |  -.5406167   .1053315    -5.13   0.000    -.7470627   -.3341707
+       2013  |  -.6408187   .1386545    -4.62   0.000    -.9125766   -.3690609
+       2014  |   -.839566   .1612632    -5.21   0.000    -1.155636   -.5234959
+       2015  |  -.9897203   .1743772    -5.68   0.000    -1.331493   -.6479472
+             |
+       _cons |  -19.98474   4.764868    -4.19   0.000    -29.32371   -10.64577
+-------------+----------------------------------------------------------------
+     sigma_u |  3.2325859
+     sigma_e |  .65441764
+         rho |  .96062995   (fraction of variance due to u_i)
+------------------------------------------------------------------------------
+
+. 
+. outreg2 using output_co2EIU2, dec(3) excel label alpha(0.001, 0.01, 0.05, 0.1) symbol(***, **, *, ^) addtext(Year FE, Ye
+> s) ctitle(Model 2: GLS, Random) drop(i.year) append
+output_co2EIU2.xml
+dir : seeout
+
+. xtpcse co2pc demEIU lngdppc trade pop urban renew forest annexI island latitude i.year if countryname!="Qatar", corr(ar1
+> ) pairwise  
+(note: estimates of rho outside [-1,1] bounded to be in the range [-1,1])
+(note: at least one disturbance covariance assumed 0, no common time periods
+       between panels)
+
+Prais-Winsten regression, correlated panels corrected standard errors (PCSEs)
+
+Group variable:   c_code                        Number of obs      =      1497
+Time variable:    year                          Number of groups   =       152
+Panels:           correlated (unbalanced)       Obs per group: min =         3
+Autocorrelation:  common AR(1)                                 avg =  9.848684
+Sigma computed by pairwise selection                           max =        10
+Estimated covariances      =     11628          R-squared          =    0.5051
+Estimated autocorrelations =         1          Wald chi2(16)      =   9880.54
+Estimated coefficients     =        20          Prob > chi2        =    0.0000
+
+------------------------------------------------------------------------------
+             |           Panel-corrected
+       co2pc |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+      demEIU |  -.0411478   .0087476    -4.70   0.000    -.0582928   -.0240029
+     lngdppc |   2.870558   .2103806    13.64   0.000     2.458219    3.282896
+       trade |   -.000806   .0021789    -0.37   0.711    -.0050765    .0034645
+         pop |   9.35e-10   2.81e-10     3.33   0.001     3.85e-10    1.49e-09
+       urban |   .0151807   .0093468     1.62   0.104    -.0031388    .0335002
+       renew |  -.0216706   .0056506    -3.84   0.000    -.0327455   -.0105956
+      forest |  -.0280077   .0079469    -3.52   0.000    -.0435833    -.012432
+      annexI |   .8255654   .6064618     1.36   0.173    -.3630778    2.014209
+      island |   .4007575   .4058483     0.99   0.323    -.3946905    1.196205
+    latitude |  -.1203149    .217129    -0.55   0.579      -.54588    .3052502
+             |
+        year |
+       2007  |  -.1299641   .0091691   -14.17   0.000    -.1479352   -.1119929
+       2008  |  -.1616577   .0173421    -9.32   0.000    -.1956475   -.1276678
+       2009  |  -.3695446    .018314   -20.18   0.000    -.4054393   -.3336499
+       2010  |  -.3569881   .0221424   -16.12   0.000    -.4003864   -.3135898
+       2011  |  -.4601205   .0283908   -16.21   0.000    -.5157655   -.4044755
+       2012  |  -.5049594   .0350574   -14.40   0.000    -.5736707    -.436248
+       2013  |  -.5930125    .039871   -14.87   0.000    -.6711582   -.5148668
+       2014  |  -.7777574   .0442462   -17.58   0.000    -.8644783   -.6910364
+       2015  |  -.9024702   .0470375   -19.19   0.000     -.994662   -.8102784
+             |
+       _cons |  -18.33688   1.788019   -10.26   0.000    -21.84133   -14.83242
+-------------+----------------------------------------------------------------
+         rho |   .9402629
+------------------------------------------------------------------------------
+
+. 
+. outreg2 using output_co2EIU2, dec(3) excel label alpha(0.001, 0.01, 0.05, 0.1) symbol(***, **, *, ^) addtext(Year FE, Ye
+> s) ctitle(Model 2: PCSE) drop(i.year) append
+output_co2EIU2.xml
+dir : seeout
+
+. xtscc co2pc demEIU lngdppc trade pop urban renew forest annexI island latitude i.year if countryname!="Qatar", re lag(4)
+(10 missing values generated)
+
+Regression with Driscoll-Kraay standard errors   Number of obs     =      1497
+Method: Random-effects GLS regression            Number of groups  =       152
+Group variable (i): c_code                       Wald chi2(16)     = 136648.07
+maximum lag: 4                                   Prob > chi2       =    0.0000
+corr(u_i, Xb) = 0 (assumed)                      overall R-squared =    0.5750
+
+------------------------------------------------------------------------------
+             |             Drisc/Kraay
+       co2pc |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+      demEIU |  -.0091185    .006546    -1.39   0.197    -.0239265    .0056896
+     lngdppc |   3.007413   .1971719    15.25   0.000     2.561379    3.453447
+       trade |   -.005809   .0019732    -2.94   0.016    -.0102725   -.0013454
+         pop |   5.83e-10   2.22e-10     2.63   0.027     8.21e-11    1.08e-09
+       urban |   .0231382   .0151988     1.52   0.162    -.0112439    .0575203
+       renew |  -.0329563   .0086335    -3.82   0.004    -.0524867   -.0134259
+      forest |  -.0259993    .007312    -3.56   0.006    -.0425402   -.0094585
+      annexI |  -.4455497   3.204405    -0.14   0.892    -7.694418    6.803319
+      island |   .1289398   .8440142     0.15   0.882    -1.780353    2.038233
+    latitude |  -.3503331   .3187316    -1.10   0.300    -1.071354    .3706878
+             |
+        year |
+       2006  |          0  (empty)
+       2007  |  -.1416761   .0085742   -16.52   0.000    -.1610723     -.12228
+       2008  |  -.1751718   .0156238   -11.21   0.000    -.2105152   -.1398283
+       2009  |  -.4220239   .0076235   -55.36   0.000    -.4392695   -.4047784
+       2010  |  -.3818051   .0153584   -24.86   0.000    -.4165482    -.347062
+       2011  |   -.484185   .0263379   -18.38   0.000    -.5437655   -.4246046
+       2012  |  -.5406167   .0303558   -17.81   0.000    -.6092862   -.4719472
+       2013  |  -.6408187   .0314689   -20.36   0.000    -.7120062   -.5696312
+       2014  |   -.839566   .0331037   -25.36   0.000    -.9144518   -.7646801
+       2015  |  -.9897203   .0332438   -29.77   0.000    -1.064923   -.9145175
+             |
+       _cons |  -19.98474   1.682834   -11.88   0.000    -23.79158    -16.1779
+-------------+----------------------------------------------------------------
+     sigma_u |  3.2325859
+     sigma_e |  .65441764
+         rho |  .96062995   (fraction of variance due to u_i)
+------------------------------------------------------------------------------
+
+
+. 
+. outreg2 using output_co2EIU2, dec(3) excel label alpha(0.001, 0.01, 0.05, 0.1) symbol(***, **, *, ^) addtext(Year FE, Ye
+> s) ctitle(Model 2: XTSCC) drop(i.year) append
+output_co2EIU2.xml
+dir : seeout
+
+. exit, clear

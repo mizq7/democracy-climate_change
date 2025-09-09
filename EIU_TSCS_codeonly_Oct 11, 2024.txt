@@ -1,0 +1,78 @@
+log using "C:\Users\Muinul\Google Drive\Muinul\00_DISSERTATION\00_DISSERTATION_final\Supplemental Materials_Original\Log file_Empirical Analysis_Final Version\Log file_Democracy_EIU_TSCS_Oct11,2020.log", replace
+use "C:\Users\Muinul\Desktop\muinul.democracy.dta", clear
+global id c_code
+global t year
+sort $id $t
+xtset $id $t, yearly
+xtdescribe
+* ln CO2 per capita
+gen lnco2pc = log(co2pc)
+* ln GDP per capita
+gen lngdppc = log(gdppc)
+* GDP per capita squared
+gen lngdppc2 = lngdppc*lngdppc
+* ln Population, Total
+gen lnpop = log(pop)
+rename DemocracyindexEIU demEIU
+drop if missing(co2pc)
+drop if missing(lngdppc)
+drop if missing(trade)
+drop if missing(pop)
+drop if missing(urban)
+drop if missing(renew)
+drop if missing(forest)
+drop if missing(annexI)
+drop if missing(island)
+drop if missing(latitude)
+drop if missing(fedfof)
+drop if missing(demEIU)
+xtreg co2pc demEIU lngdppc trade pop urban renew forest annexI island latitude, re vce (cluster c_code)
+predict e, e
+predict u, u
+predict ue, ue  
+kdensity e, norm
+kdensity u, norm
+kdensity ue, norm
+pnorm e
+pnorm u
+pnorm ue
+qnorm e
+qnorm u
+qnorm ue, mlabel(countryname)
+predict e1 if countryname!="Qatar", e
+predict u1 if countryname!="Qatar", u
+predict ue1 if countryname!="Qatar", ue
+kdensity e1 if countryname!="Qatar", norm
+kdensity u1 if countryname!="Qatar", norm
+kdensity ue1 if countryname!="Qatar", norm
+pnorm e1 if countryname!="Qatar"
+pnorm u1 if countryname!="Qatar"
+pnorm ue1 if countryname!="Qatar"
+qnorm e1 if countryname!="Qatar"
+qnorm u1 if countryname!="Qatar"
+qnorm ue1 if countryname!="Qatar", mlabel(countryname)
+reg co2pc demEIU lngdppc trade pop urban renew forest annexI island latitude
+lvr2plot, mlabel(countryname)
+xtline co2pc if demEIU>=90, overlay
+graph save Graph "C:\Users\Muinul\Google Drive\Muinul\00_DISSERTATION\00_DISSERTATION_final\Supplemental Materials_Original\Graphs\Democracy_EIU_top 10 percent democracy line.gph"
+xtline co2pc if demEIU<=10, overlay
+xtline co2pc if demEIU<=20, overlay
+graph save Graph "C:\Users\Muinul\Google Drive\Muinul\00_DISSERTATION\00_DISSERTATION_final\Supplemental Materials_Original\Graphs\Democracy_EIU_bottom 20 percent democracy line.gph"
+reg co2pc demEIU lngdppc trade if countryname!="Qatar", robust
+outreg2 using output_co2EIU1, dec(3) excel label alpha(0.001, 0.01, 0.05, 0.1) symbol(***, **, *, ^) addtext(Year FE, No) ctitle(Model 1: OLS) drop(i.year) replace
+xtreg co2pc demEIU lngdppc trade i.year if countryname!="Qatar", fe
+xtreg co2pc demEIU lngdppc trade i.year if countryname!="Qatar", vce(cluster c_code)  
+outreg2 using output_co2EIU1, dec(3) excel label alpha(0.001, 0.01, 0.05, 0.1) symbol(***, **, *, ^) addtext(Year FE, Yes) ctitle(Model 1: GLS, Random) drop(i.year) append
+xtpcse co2pc demEIU lngdppc trade i.year if countryname!="Qatar", corr(ar1) pairwise 
+outreg2 using output_co2EIU1, dec(3) excel label alpha(0.001, 0.01, 0.05, 0.1) symbol(***, **, *, ^) ctitle(Model 1: PCSE) drop(i.year) append
+xtscc co2pc demEIU lngdppc trade i.year if countryname!="Qatar", re lag(4) 
+outreg2 using output_co2EIU1, dec(3) excel label alpha(0.001, 0.01, 0.05, 0.1) symbol(***, **, *, ^) addtext(Year FE, Yes) ctitle(Model 1: XTSCC) drop(i.year) append
+reg co2pc demEIU lngdppc trade pop urban renew forest annexI island latitude if countryname!="Qatar", robust
+outreg2 using output_co2EIU2, dec(3) excel label alpha(0.001, 0.01, 0.05, 0.1) symbol(***, **, *, ^) addtext(Year FE, No) ctitle(Model 2: OLS) drop(i.year) replace
+xtreg co2pc demEIU lngdppc trade pop urban renew forest annexI island latitude i.year if countryname!="Qatar", fe
+xtreg co2pc demEIU lngdppc trade pop urban renew forest annexI island latitude i.year if countryname!="Qatar", vce(cluster c_code)
+outreg2 using output_co2EIU2, dec(3) excel label alpha(0.001, 0.01, 0.05, 0.1) symbol(***, **, *, ^) addtext(Year FE, Yes) ctitle(Model 2: GLS, Random) drop(i.year) append
+xtpcse co2pc demEIU lngdppc trade pop urban renew forest annexI island latitude i.year if countryname!="Qatar", corr(ar1) pairwise  
+outreg2 using output_co2EIU2, dec(3) excel label alpha(0.001, 0.01, 0.05, 0.1) symbol(***, **, *, ^) addtext(Year FE, Yes) ctitle(Model 2: PCSE) drop(i.year) append
+xtscc co2pc demEIU lngdppc trade pop urban renew forest annexI island latitude i.year if countryname!="Qatar", re lag(4)
+outreg2 using output_co2EIU2, dec(3) excel label alpha(0.001, 0.01, 0.05, 0.1) symbol(***, **, *, ^) addtext(Year FE, Yes) ctitle(Model 2: XTSCC) drop(i.year) append

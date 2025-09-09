@@ -1,0 +1,169 @@
+clear all
+set more off 
+pause on
+ssc install runmlwin, replace
+global MLwiN_path "C:\Program Files\MLwiN v3.04\mlwin.exe"
+use "C:\Users\Muinul\Desktop\muinul.democracy.journal.dta", clear
+*Log-transformed of CO2 per capita
+gen lnco2pc = log(co2pc)
+*Log-transformed of GDP per capita
+gen lngdppc = log(gdppc)
+* GDP per capita squared
+gen lngdppc2 = lngdppc*lngdppc
+*Log-transformed of Population, Total
+gen lnpop = log(pop)
+egen v2x_polyarchy_mean = mean(v2x_polyarchy), by(c_code)
+egen lngdppc_mean = mean(lngdppc), by(c_code)
+egen trade_mean = mean(trade), by(c_code)
+egen popgro_mean = mean(popgro), by(c_code)
+egen urban_mean = mean(urban), by(c_code)
+egen renew_mean = mean(renew), by(c_code)
+egen forest_mean = mean(forest), by(c_code)
+egen annexI_mean = mean(annexI), by(c_code)
+egen island_mean = mean(island), by(c_code)
+egen latitude_mean = mean(latitude), by(c_code)
+egen industry_mean = mean(industry), by(c_code)
+drop if missing(v2x_polyarchy)
+drop if missing(co2pc)
+drop if missing(lngdppc)
+drop if missing(trade)
+drop if missing(popgro)
+drop if missing(urban)
+drop if missing(renew)
+drop if missing(forest)
+drop if missing(annexI)
+drop if missing(island)
+drop if missing(latitude)
+drop if missing(industry)
+egen v2x_polyarchy_mean_new = mean(v2x_polyarchy), by(c_code)
+egen year_mean_new = mean(year), by(c_code)
+egen lngdppc_mean_new = mean(lngdppc), by(c_code)
+egen trade_mean_new = mean(trade), by(c_code)
+egen popgro_mean_new = mean(popgro), by(c_code)
+egen urban_mean_new = mean(urban), by(c_code)
+egen renew_mean_new = mean(renew), by(c_code)
+egen forest_mean_new = mean(forest), by(c_code)
+egen annexI_mean_new = mean(annexI), by(c_code)
+egen island_mean_new = mean(island), by(c_code)
+egen latitude_mean_new = mean(latitude), by(c_code)
+egen industry_mean_new = mean(industry), by(c_code)
+gen v2x_polyarchyw = v2x_polyarchy - v2x_polyarchy_mean_new
+gen yearw = year - year_mean_new
+gen lngdppcw = lngdppc - lngdppc_mean_new 
+gen tradew = trade - trade_mean_new 
+gen popgrow = popgro - popgro_mean_new 
+gen urbanw = urban - urban_mean_new 
+gen reneww = renew - renew_mean_new 
+gen forestw = forest - forest_mean_new 
+gen annexIw = annexI - annexI_mean_new 
+gen islandw = island - island_mean_new 
+gen latitudew = latitude - latitude_mean_new
+gen industryw = industry - industry_mean_new
+drop v2x_polyarchy_mean_new 
+drop lngdppc_mean_new 
+drop trade_mean_new 
+drop popgro_mean_new 
+drop urban_mean_new 
+drop renew_mean_new 
+drop forest_mean_new 
+drop annexI_mean_new 
+drop island_mean_new 
+drop latitude_mean_new
+drop industry_mean_new
+sum v2x_polyarchy, meanonly
+gen cv2x_polyarchy = v2x_polyarchy - r(mean)
+sum lngdppc, meanonly
+gen clngdppc = lngdppc - r(mean)
+sum year, meanonly
+gen c_year = year - r(mean)
+sum trade, meanonly
+gen ctrade = trade - r(mean)
+sum popgro, meanonly
+gen cpopgro = popgro - r(mean)
+sum urban, meanonly
+gen curban = urban - r(mean)
+sum renew, meanonly
+gen crenew = renew - r(mean)
+sum forest, meanonly
+gen cforest = forest - r(mean)
+sum annexI, meanonly
+gen cannexI = annexI - r(mean)
+sum island, meanonly
+gen cisland = island - r(mean)
+sum latitude, meanonly
+gen clatitude = latitude - r(mean)
+sum v2x_polyarchy_mean, meanonly
+gen cv2x_polyarchy_mean = v2x_polyarchy_mean - r(mean)
+sum lngdppc_mean, meanonly
+gen clngdppc_mean = lngdppc_mean - r(mean)
+sum trade_mean, meanonly
+gen ctrade_mean = trade_mean - r(mean)
+sum popgro_mean, meanonly
+gen cpopgro_mean = popgro_mean - r(mean)
+sum urban_mean, meanonly
+gen curban_mean = urban_mean - r(mean)
+sum renew_mean, meanonly
+gen crenew_mean = renew_mean - r(mean)
+sum forest_mean, meanonly
+gen cforest_mean = forest_mean - r(mean)
+sum annexI_mean, meanonly
+gen cannexI_mean = annexI_mean - r(mean)
+sum island_mean, meanonly
+gen cisland_mean = island_mean - r(mean)
+sum latitude_mean, meanonly
+gen clatitude_mean = latitude_mean - r(mean)
+sum industry_mean, meanonly
+gen cindustry_mean = industry_mean - r(mean)
+order co2pc year v2x_polyarchy lngdppc trade popgro industry urban renew forest annexI island latitude, last
+foreach v of varlist co2pc-latitude{
+    egen `v'_m=mean(`v'), by(c_code)
+}
+foreach v of varlist year-latitude {
+    gen `v'_devm=`v'-`v'_m
+}
+matrix A = (1,1,0)
+global id c_code
+global t year
+sort $id $t
+xtset $id $t, yearly
+xtdescribe
+gen cons=1
+xtreg co2pc cons v2x_polyarchyw lngdppcw tradew yearw popgrow urbanw industryw reneww forestw annexIw islandw latitudew i.year v2x_polyarchy_mean clngdppc_mean ctrade_mean cpopgro_mean curban_mean cindustry_mean crenew_mean cforest_mean cannexI_mean cisland_mean clatitude_mean, vce (cluster c_code)
+predict e, e
+predict u, u
+predict ue, ue  
+kdensity e, norm
+kdensity u, norm
+kdensity ue, norm
+pnorm e
+pnorm u
+pnorm ue
+qnorm e
+qnorm u
+qnorm ue, mlabel(countryname)
+predict e1 if countryname!="Qatar", e
+predict u1 if countryname!="Qatar", u
+predict ue1 if countryname!="Qatar", ue
+kdensity e1 if countryname!="Qatar", norm
+kdensity u1 if countryname!="Qatar", norm
+kdensity ue1 if countryname!="Qatar", norm
+pnorm e1 if countryname!="Qatar"
+pnorm u1 if countryname!="Qatar"
+pnorm ue1 if countryname!="Qatar"
+qnorm e1 if countryname!="Qatar"
+qnorm u1 if countryname!="Qatar"
+qnorm ue1 if countryname!="Qatar", mlabel(countryname)
+reg co2pc cons v2x_polyarchyw lngdppcw tradew yearw popgrow urbanw reneww forestw annexIw islandw latitudew i.year v2x_polyarchy_mean clngdppc_mean ctrade_mean cpopgro_mean curban_mean crenew_mean cforest_mean cannexI_mean cisland_mean clatitude_mean
+lvr2plot, mlabel(countryname)
+runmlwin co2pc cons if countryname!="Qatar", level2(c_code: cons) level1(year: cons) nopause rigls
+outreg2 using output_co2dem1, dec(3) excel label alpha (0.001, 0.01, 0.05, 0.1) symbol(***, **, *, ^) ctitle(Model 1) drop(i.year) replace
+xtreg co2pc v2x_polyarchy clngdppc ctrade c_year cpop curban crenew cforest cannexI cisland clatitude i.year if countryname!="Qatar", fe
+estimates store Mod2_FE
+outreg2 using output_co2dem2, dec(3) excel label alpha(0.001, 0.01, 0.05, 0.1) symbol(***, **, *, ^) addtext(Year FE, Yes) ctitle(Model 5) drop(i.year) append
+runmlwin co2pc cons v2x_polyarchy clngdppc ctrade c_year cpop curban crenew cforest cannexI cisland clatitude i.year if countryname!="Qatar", level2(c_code: cons) level1(year: cons) nopause rigls
+estimates store Mod2_RE
+outreg2 using output_co2dem2, dec(3) excel label alpha(0.001, 0.01, 0.05, 0.1) symbol(***, **, *, ^) addtext(Year FE, Yes) ctitle(Model 6) drop(i.year) append
+runmlwin co2pc cons v2x_polyarchyw lngdppcw tradew yearw popgrow urbanw reneww forestw annexIw islandw latitudew i.year v2x_polyarchy_mean clngdppc_mean ctrade_mean cpopgro_mean curban_mean crenew_mean cforest_mean cannexI_mean cisland_mean clatitude_mean if countryname!="Qatar", level2(c_code: cons) level1(year: cons) nopause rigls
+estimates store Mod2_REwb
+outreg2 using output_co2dem2, dec(3) excel label alpha(0.001, 0.01, 0.05, 0.1) symbol(***, **, *, ^) addtext(Year FE, Yes) ctitle(Model 7) drop(i.year) append
+

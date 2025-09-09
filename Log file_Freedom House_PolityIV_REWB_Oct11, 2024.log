@@ -1,0 +1,1119 @@
+--------------------------------------------------------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  C:\Users\Muinul\Google Drive\Muinul\00_DISSERTATION\00_DISSERTATION_final\Supplemental Materials_Original\Log
+>  file_Empirical Analysis_Final Version\Log file_Freedom House_PolityIV_REWB_Oct11,2020.log
+  log type:  text
+ opened on:  11 Oct 2020, 23:54:31
+
+. log using "C:\Users\Muinul\Google Drive\Muinul\00_DISSERTATION\01_Democracy\LOG File\Log File_Within-Between Estimation_
+> Freedom House Rescaled Dataset.log", replace
+log file already open
+r(604);
+
+. 
+. clear all
+
+. 
+. set more off 
+
+. 
+. pause on
+
+. 
+. ssc install runmlwin, replace
+proxy host not found
+http://fmwww.bc.edu/repec/bocode/r/ either
+  1)  is not a valid URL, or
+  2)  could not be contacted, or
+  3)  is not a Stata download site (has no stata.toc file).
+r(660);
+
+. 
+. global MLwiN_path "C:\Program Files\MLwiN v3.04\mlwin.exe"
+
+. 
+. use "C:\Users\Muinul\Desktop\muinul.democracy.dta", clear
+
+. 
+. recode pr (7=1) (6=2) (5=3) (3=5) (2=6) (1=7), gen (pr_recode)
+(7486 differences between pr and pr_recode)
+
+. 
+. recode cl (7=1) (6=2) (5=3) (3=5) (2=6) (1=7), gen (cl_recode)
+(7119 differences between cl and cl_recode)
+
+. 
+. gen fh_democracy_sum= (pr_recode+cl_recode)
+(33906 missing values generated)
+
+. 
+. gen fh_democracy_mean= (pr_recode+cl_recode)/2
+(33906 missing values generated)
+
+. 
+. * ln CO2 per capita
+
+. 
+. gen lnco2pc = log(co2pc)
+(30936 missing values generated)
+
+. 
+. * ln GDP per capita
+
+. 
+. gen lngdppc = log(gdppc)
+(36137 missing values generated)
+
+. 
+. * GDP per capita squared
+
+. 
+. gen lngdppc2 = lngdppc*lngdppc
+(36137 missing values generated)
+
+. 
+. *ln Population, Total
+
+. 
+. gen lnpop = log(pop)
+(28445 missing values generated)
+
+. 
+. 
+. 
+. egen fh_democracy_sum_mean = mean(fh_democracy_sum), by(c_code)
+(19606 missing values generated)
+
+. 
+. egen lngdppc_mean = mean(lngdppc), by(c_code)
+(14968 missing values generated)
+
+. 
+. egen trade_mean = mean(trade), by(c_code)
+(14168 missing values generated)
+
+. 
+. egen pop_mean = mean(pop), by(c_code)
+(13015 missing values generated)
+
+. 
+. egen urban_mean = mean(urban), by(c_code)
+(13137 missing values generated)
+
+. 
+. egen renew_mean = mean(renew), by(c_code)
+(13259 missing values generated)
+
+. 
+. egen forest_mean = mean(forest), by(c_code)
+(13562 missing values generated)
+
+. 
+. egen annexI_mean = mean(annexI), by(c_code)
+(13428 missing values generated)
+
+. 
+. egen island_mean = mean(island), by(c_code)
+(13549 missing values generated)
+
+. 
+. egen latitude_mean = mean(latitude), by(c_code)
+(13777 missing values generated)
+
+. 
+. drop if missing(fh_democracy_sum)
+(33906 observations deleted)
+
+. 
+. drop if missing(co2pc)
+(4678 observations deleted)
+
+. 
+. drop if missing(lngdppc)
+(1506 observations deleted)
+
+. 
+. drop if missing(trade)
+(130 observations deleted)
+
+. 
+. drop if missing(pop)
+(0 observations deleted)
+
+. 
+. drop if missing(urban)
+(0 observations deleted)
+
+. 
+. drop if missing(renew)
+(74 observations deleted)
+
+. 
+. drop if missing(forest)
+(44 observations deleted)
+
+. 
+. drop if missing(annexI)
+(0 observations deleted)
+
+. 
+. drop if missing(island)
+(0 observations deleted)
+
+. 
+. drop if missing(latitude)
+(0 observations deleted)
+
+. 
+. egen fh_democracy_sum_mean_new = mean(fh_democracy_sum), by(c_code)
+
+. 
+. egen year_mean_new = mean(year), by(c_code)
+
+. 
+. egen lngdppc_mean_new = mean(lngdppc), by(c_code)
+
+. 
+. egen trade_mean_new = mean(trade), by(c_code)
+
+. 
+. egen pop_mean_new = mean(pop), by(c_code)
+
+. 
+. egen urban_mean_new = mean(urban), by(c_code)
+
+. 
+. egen renew_mean_new = mean(renew), by(c_code)
+
+. 
+. egen forest_mean_new = mean(forest), by(c_code)
+
+. 
+. egen annexI_mean_new = mean(annexI), by(c_code)
+
+. 
+. egen island_mean_new = mean(island), by(c_code)
+
+. 
+. egen latitude_mean_new = mean(latitude), by(c_code)
+
+. 
+. gen fh_democracy_sumw = fh_democracy_sum - fh_democracy_sum_mean_new
+
+. 
+. gen yearw = year - year_mean_new
+
+. 
+. gen lngdppcw = lngdppc - lngdppc_mean_new 
+
+. 
+. gen tradew = trade - trade_mean_new 
+
+. 
+. gen popw = pop - pop_mean_new 
+
+. 
+. gen urbanw = urban - urban_mean_new 
+
+. 
+. gen reneww = renew - renew_mean_new 
+
+. 
+. gen forestw = forest - forest_mean_new 
+
+. 
+. gen annexIw = annexI - annexI_mean_new 
+
+. 
+. gen islandw = island - island_mean_new 
+
+. 
+. gen latitudew = latitude - latitude_mean_new
+
+. 
+. drop fh_democracy_sum_mean_new 
+
+. 
+. drop lngdppc_mean_new 
+
+. 
+. drop trade_mean_new 
+
+. 
+. drop pop_mean_new 
+
+. 
+. drop urban_mean_new 
+
+. 
+. drop renew_mean_new 
+
+. 
+. drop forest_mean_new 
+
+. 
+. drop annexI_mean_new 
+
+. 
+. drop island_mean_new 
+
+. 
+. drop latitude_mean_new
+
+. 
+. sum fh_democracy_sum, meanonly
+
+. 
+. gen cfh_democracy_sum = fh_democracy_sum - r(mean)
+
+. 
+. sum lngdppc, meanonly
+
+. 
+. gen clngdppc = lngdppc - r(mean)
+
+. 
+. sum year, meanonly
+
+. 
+. gen c_year = year - r(mean)
+
+. 
+. sum trade, meanonly
+
+. 
+. gen ctrade = trade - r(mean)
+
+. 
+. sum pop, meanonly
+
+. 
+. gen cpop = pop - r(mean)
+
+. 
+. sum urban, meanonly
+
+. 
+. gen curban = urban - r(mean)
+
+. 
+. sum renew, meanonly
+
+. 
+. gen crenew = renew - r(mean)
+
+. 
+. sum forest, meanonly
+
+. 
+. gen cforest = forest - r(mean)
+
+. 
+. sum annexI, meanonly
+
+. 
+. gen cannexI = annexI - r(mean)
+
+. 
+. sum island, meanonly
+
+. 
+. gen cisland = island - r(mean)
+
+. 
+. sum latitude, meanonly
+
+. 
+. gen clatitude = latitude - r(mean)
+
+. 
+. sum fh_democracy_sum_mean, meanonly
+
+. 
+. gen cfh_democracy_sum_mean = fh_democracy_sum_mean - r(mean)
+
+. 
+. sum lngdppc_mean, meanonly
+
+. 
+. gen clngdppc_mean = lngdppc_mean - r(mean)
+
+. 
+. sum trade_mean, meanonly
+
+. 
+. gen ctrade_mean = trade_mean - r(mean)
+
+. 
+. sum pop_mean, meanonly
+
+. 
+. gen cpop_mean = pop_mean - r(mean)
+
+. 
+. sum urban_mean, meanonly
+
+. 
+. gen curban_mean = urban_mean - r(mean)
+
+. 
+. sum renew_mean, meanonly
+
+. 
+. gen crenew_mean = renew_mean - r(mean)
+
+. 
+. sum forest_mean, meanonly
+
+. 
+. gen cforest_mean = forest_mean - r(mean)
+
+. 
+. sum annexI_mean, meanonly
+
+. 
+. gen cannexI_mean = annexI_mean - r(mean)
+
+. 
+. sum island_mean, meanonly
+
+. 
+. gen cisland_mean = island_mean - r(mean)
+
+. 
+. sum latitude_mean, meanonly
+
+. 
+. gen clatitude_mean = latitude_mean - r(mean)
+
+. 
+. order co2pc year fh_democracy_sum lngdppc trade pop urban renew forest annexI island latitude, last
+
+. 
+. foreach v of varlist co2pc-latitude{
+  2. 
+.     egen `v'_m=mean(`v'), by(c_code)
+  3. 
+. }
+
+. 
+. foreach v of varlist year-latitude {
+  2. 
+.     gen `v'_devm=`v'-`v'_m
+  3. 
+. }
+
+. 
+. matrix A = (1,1,0)
+
+. 
+. global id c_code
+
+. 
+. global t year
+
+. 
+. sort $id $t
+
+. 
+. xtset $id $t, yearly
+       panel variable:  c_code (unbalanced)
+        time variable:  year, 1990 to 2015
+                delta:  1 year
+
+. 
+. xtdescribe
+
+  c_code:  4, 6, ..., 381                                    n =         76
+    year:  1990, 1991, ..., 2015                             T =         26
+           Delta(year) = 1 year
+           Span(year)  = 26 periods
+           (c_code*year uniquely identifies each observation)
+
+Distribution of T_i:   min      5%     25%       50%       75%     95%     max
+                         1       5      24        26        26      26      26
+
+     Freq.  Percent    Cum. |  Pattern
+ ---------------------------+----------------------------
+       51     67.11   67.11 |  11111111111111111111111111
+        5      6.58   73.68 |  ..111111111111111111111111
+        4      5.26   78.95 |  ..........1111111111111111
+        3      3.95   82.89 |  .1111111111111111111111111
+        2      2.63   85.53 |  .....111111111111111111111
+        1      1.32   86.84 |  .......................111
+        1      1.32   88.16 |  .....................11111
+        1      1.32   89.47 |  ...................1111111
+        1      1.32   90.79 |  ................11111.....
+        7      9.21  100.00 | (other patterns)
+ ---------------------------+----------------------------
+       76    100.00         |  XXXXXXXXXXXXXXXXXXXXXXXXXX
+
+. 
+. 
+. 
+. gen cons=1
+
+. 
+. xtreg co2pc cons fh_democracy_sumw lngdppcw tradew yearw popw urbanw reneww forestw annexIw islandw latitudew i.year fh_
+> democracy_sum_mean clngdppc_mean ctrade_mean cpop_mean curban_mean crenew_mean cforest_mean cannexI_mean cisland_mean cl
+> atitude_mean, vce (cluster c_code)
+note: cons omitted because of collinearity
+note: annexIw omitted because of collinearity
+note: islandw omitted because of collinearity
+no room to add more variables
+    Up to 2,048 variables are allowed with this version of Stata.  Versions are available that allow up to 32,767
+    variables.
+r(900);
+
+. 
+. predict e, e
+option e not allowed
+r(198);
+
+. 
+. predict u, u
+option u not allowed
+r(198);
+
+. 
+. predict ue, ue  
+option ue not allowed
+r(198);
+
+. 
+. kdensity e, norm
+e ambiguous abbreviation
+r(111);
+
+. 
+. kdensity u, norm
+u ambiguous abbreviation
+r(111);
+
+. 
+. kdensity ue, norm
+variable ue not found
+r(111);
+
+. 
+. pnorm e
+e ambiguous abbreviation
+r(111);
+
+. 
+. pnorm u
+u ambiguous abbreviation
+r(111);
+
+. 
+. pnorm ue
+variable ue not found
+r(111);
+
+. 
+. qnorm e
+e ambiguous abbreviation
+r(111);
+
+. 
+. qnorm u
+u ambiguous abbreviation
+r(111);
+
+. 
+. qnorm ue, mlabel(countryname)
+variable ue not found
+r(111);
+
+. 
+. predict e1 if countryname!="Qatar", e
+option e not allowed
+r(198);
+
+. 
+. predict u1 if countryname!="Qatar", u
+option u not allowed
+r(198);
+
+. 
+. predict ue1 if countryname!="Qatar", ue
+option ue not allowed
+r(198);
+
+. 
+. kdensity e1 if countryname!="Qatar", norm
+variable e1 not found
+r(111);
+
+. 
+. kdensity u1 if countryname!="Qatar", norm
+variable u1 not found
+r(111);
+
+. 
+. kdensity ue1 if countryname!="Qatar", norm
+variable ue1 not found
+r(111);
+
+. 
+. pnorm e1 if countryname!="Qatar"
+variable e1 not found
+r(111);
+
+. 
+. pnorm u1 if countryname!="Qatar"
+variable u1 not found
+r(111);
+
+. 
+. pnorm ue1 if countryname!="Qatar"
+variable ue1 not found
+r(111);
+
+. 
+. qnorm e1 if countryname!="Qatar"
+variable e1 not found
+r(111);
+
+. 
+. qnorm u1 if countryname!="Qatar"
+variable u1 not found
+r(111);
+
+. 
+. qnorm ue1 if countryname!="Qatar", mlabel(countryname)
+variable ue1 not found
+r(111);
+
+. 
+. reg co2pc cons fh_democracy_sumw lngdppcw tradew yearw popw urbanw reneww forestw annexIw islandw latitudew i.year fh_de
+> mocracy_sum_mean clngdppc_mean ctrade_mean cpop_mean curban_mean crenew_mean cforest_mean cannexI_mean cisland_mean clat
+> itude_mean
+note: cons omitted because of collinearity
+note: annexIw omitted because of collinearity
+note: islandw omitted because of collinearity
+
+      Source |       SS       df       MS              Number of obs =    1754
+-------------+------------------------------           F( 44,  1709) =   59.76
+       Model |  46779.1091    44  1063.16157           Prob > F      =  0.0000
+    Residual |  30404.9847  1709   17.791097           R-squared     =  0.6061
+-------------+------------------------------           Adj R-squared =  0.5959
+       Total |  77184.0938  1753  44.0297169           Root MSE      =  4.2179
+
+---------------------------------------------------------------------------------------
+                co2pc |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+----------------------+----------------------------------------------------------------
+                 cons |          0  (omitted)
+    fh_democracy_sumw |   .0357518   .0977095     0.37   0.714    -.1558909    .2273946
+             lngdppcw |    2.12121   .7115617     2.98   0.003     .7255859    3.516833
+               tradew |   -.005152   .0056217    -0.92   0.360     -.016178    .0058741
+                yearw |   -.971742   .0680551   -14.28   0.000    -1.105222   -.8382619
+                 popw |   9.22e-10   5.84e-09     0.16   0.875    -1.05e-08    1.24e-08
+               urbanw |   .0598843     .05005     1.20   0.232    -.0382814    .1580499
+               reneww |  -.0128366   .0237051    -0.54   0.588    -.0593307    .0336575
+              forestw |  -.0594923   .0712626    -0.83   0.404    -.1992635    .0802788
+              annexIw |          0  (omitted)
+              islandw |          0  (omitted)
+            latitudew |   -3909082    1574859    -2.48   0.013     -6997937   -820227.9
+                      |
+                 year |
+                1991  |    .917312   .8115997     1.13   0.259    -.6745215    2.509146
+                1992  |    2.10938   .8035207     2.63   0.009     .5333925    3.685368
+                1993  |   2.942426   .8135319     3.62   0.000     1.346803     4.53805
+                1994  |   3.863714   .8320872     4.64   0.000     2.231697    5.495731
+                1995  |   4.688764   .8473235     5.53   0.000     3.026864    6.350665
+                1996  |   5.651323   .8729836     6.47   0.000     3.939094    7.363552
+                1997  |   6.542408    .899202     7.28   0.000     4.778755     8.30606
+                1998  |    7.42671    .932275     7.97   0.000     5.598189     9.25523
+                1999  |   8.372654    .968606     8.64   0.000     6.472876    10.27243
+                2000  |   9.810016   .9904658     9.90   0.000     7.867363    11.75267
+                2001  |   10.87863   1.031991    10.54   0.000     8.854534    12.90273
+                2002  |   11.63932   1.069881    10.88   0.000     9.540906    13.73774
+                2003  |   12.70014   1.115688    11.38   0.000     10.51188     14.8884
+                2004  |   13.61608   1.162709    11.71   0.000     11.33559    15.89656
+                2005  |   14.38989   1.208654    11.91   0.000     12.01929    16.76048
+                2006  |   15.22497   1.246786    12.21   0.000     12.77959    17.67036
+                2007  |   15.93863   1.297723    12.28   0.000     13.39334    18.48393
+                2008  |    16.7981   1.350085    12.44   0.000     14.15011     19.4461
+                2009  |   17.37412   1.395544    12.45   0.000     14.63697    20.11127
+                2010  |   18.39744   1.449366    12.69   0.000     15.55472    21.24016
+                2011  |   19.31611   1.500645    12.87   0.000     16.37282    22.25941
+                2012  |   20.33451   1.556255    13.07   0.000     17.28214    23.38687
+                2013  |   20.95339   1.605953    13.05   0.000     17.80355    24.10323
+                2014  |   21.84456   1.662736    13.14   0.000     18.58335    25.10578
+                2015  |   22.67344   1.720461    13.18   0.000       19.299    26.04787
+                      |
+fh_democracy_sum_mean |  -.4017409   .0371613   -10.81   0.000    -.4746273   -.3288544
+        clngdppc_mean |   5.894191   .2279864    25.85   0.000     5.447029    6.341352
+          ctrade_mean |  -.0063162   .0027994    -2.26   0.024    -.0118069   -.0008256
+            cpop_mean |   1.90e-09   6.48e-10     2.93   0.003     6.26e-10    3.17e-09
+          curban_mean |  -.0256825   .0095905    -2.68   0.007    -.0444929   -.0068721
+          crenew_mean |   .0131991   .0059776     2.21   0.027     .0014749    .0249234
+         cforest_mean |  -.0255153   .0046874    -5.44   0.000    -.0347089   -.0163216
+         cannexI_mean |   1.694582   .7304116     2.32   0.020     .2619869    3.127177
+         cisland_mean |   .8674876   .3451387     2.51   0.012     .1905487    1.544426
+       clatitude_mean |    -.53907   .1415485    -3.81   0.000    -.8166965   -.2614435
+                _cons |  -3.689063   1.068433    -3.45   0.001    -5.784637   -1.593489
+---------------------------------------------------------------------------------------
+
+. 
+. lvr2plot, mlabel(countryname)
+
+. 
+. runmlwin co2pc cons if countryname!="Qatar", level2(c_code: cons) level1(year: cons) nopause rigls
+ 
+MLwiN 3.04 multilevel model                     Number of obs      =      1738
+Normal response model
+Estimation algorithm: RIGLS
+
+-----------------------------------------------------------
+                |   No. of       Observations per Group
+ Level Variable |   Groups    Minimum    Average    Maximum
+----------------+------------------------------------------
+         c_code |       75          1       23.2         26
+-----------------------------------------------------------
+
+Run time (seconds)        =       0.98
+Number of iterations      =          3
+Log restricted-likelihood = -2608.3075
+Restricted-deviance       =   5216.615
+------------------------------------------------------------------------------
+       co2pc |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+        cons |   4.483448   .5723906    7.83    0.000     3.361583    5.605313
+------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------
+   Random-effects Parameters |   Estimate   Std. Err.     [95% Conf. Interval]
+-----------------------------+------------------------------------------------
+Level 2: c_code              |
+                   var(cons) |   24.51519   4.003005      16.66945    32.36094
+-----------------------------+------------------------------------------------
+Level 1: year                |
+                   var(cons) |   .8952211   .0310482      .8343678    .9560743
+------------------------------------------------------------------------------
+
+. 
+. estimates store Mod1_REnull
+
+. 
+. outreg2 using output_co2dem1, dec(3) excel label alpha (0.001, 0.01, 0.05, 0.1) symbol(***, **, *, ^) ctitle(Model 1:Nul
+> l) drop(i.year) replace
+output_co2dem1.xml
+dir : seeout
+
+. 
+. xtreg co2pc fh_democracy_sum clngdppc ctrade c_year i.year if countryname!="Qatar", fe
+note: 2015.year omitted because of collinearity
+
+Fixed-effects (within) regression               Number of obs      =      1738
+Group variable: c_code                          Number of groups   =        75
+
+R-sq:  within  = 0.1421                         Obs per group: min =         1
+       between = 0.5913                                        avg =      23.2
+       overall = 0.5686                                        max =        26
+
+                                                F(28,1635)         =      9.68
+corr(u_i, Xb)  = 0.4800                         Prob > F           =    0.0000
+
+----------------------------------------------------------------------------------
+           co2pc |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-----------------+----------------------------------------------------------------
+fh_democracy_sum |   .0764826   .0203295     3.76   0.000     .0366079    .1163572
+        clngdppc |   1.824604   .1384952    13.17   0.000     1.552957    2.096251
+          ctrade |  -.0045995    .001172    -3.92   0.000    -.0068983   -.0023007
+          c_year |  -.0294514   .0071141    -4.14   0.000    -.0434051   -.0154977
+                 |
+            year |
+           1991  |   .0809268    .166175     0.49   0.626    -.2450115    .4068652
+           1992  |   .1258197   .1597987     0.79   0.431     -.187612    .4392514
+           1993  |    .169972   .1558535     1.09   0.276    -.1357215    .4756655
+           1994  |   .1753757   .1531716     1.14   0.252    -.1250575     .475809
+           1995  |   .0815288   .1492664     0.55   0.585    -.2112447    .3743022
+           1996  |   .1238838   .1467373     0.84   0.399    -.1639291    .4116968
+           1997  |   .1177087   .1439529     0.82   0.414    -.1646428    .4000602
+           1998  |   .0860745   .1419361     0.61   0.544    -.1923212    .3644702
+           1999  |   .1197083   .1402334     0.85   0.393    -.1553477    .3947643
+           2000  |   .1392228   .1368371     1.02   0.309    -.1291717    .4076174
+           2001  |   .1760165    .135598     1.30   0.194    -.0899476    .4419807
+           2002  |   .1520511   .1341638     1.13   0.257    -.1110999    .4152021
+           2003  |   .3380853   .1337159     2.53   0.012     .0758127    .6003578
+           2004  |    .399676   .1336481     2.99   0.003     .1375364    .6618156
+           2005  |   .3380702   .1343881     2.52   0.012     .0744792    .6016612
+           2006  |   .3093455    .133532     2.32   0.021     .0474337    .5712573
+           2007  |   .2640907   .1343039     1.97   0.049      .000665    .5275164
+           2008  |   .3050358    .135404     2.25   0.024     .0394523    .5706193
+           2009  |   .0903747   .1353892     0.67   0.505    -.1751798    .3559291
+           2010  |   .2445227   .1369702     1.79   0.074    -.0241328    .5131782
+           2011  |   .2350703   .1388224     1.69   0.091    -.0372181    .5073588
+           2012  |   .2938698   .1408859     2.09   0.037      .017534    .5702056
+           2013  |   .2177474   .1424725     1.53   0.127    -.0617003    .4971952
+           2014  |   .0925599   .1450239     0.64   0.523    -.1918922    .3770121
+           2015  |          0  (omitted)
+                 |
+           _cons |    3.52873   .2100205    16.80   0.000     3.116792    3.940667
+-----------------+----------------------------------------------------------------
+         sigma_u |  3.6315643
+         sigma_e |  .88379484
+             rho |  .94408522   (fraction of variance due to u_i)
+----------------------------------------------------------------------------------
+F test that all u_i=0:     F(74, 1635) =   246.71            Prob > F = 0.0000
+
+. 
+. estimates store Mod1_FE
+
+. 
+. outreg2 using output_co2dem1, dec(3) excel label alpha(0.001, 0.01, 0.05, 0.1) symbol(***, **, *, ^) addtext(Year FE, Ye
+> s) ctitle(Model 1:FE) drop(i.year) append
+output_co2dem1.xml
+dir : seeout
+
+. 
+. runmlwin co2pc cons fh_democracy_sum clngdppc ctrade c_year i.year if countryname!="Qatar", level2(c_code: cons) level1(
+> year: cons) nopause rigls
+ 
+note: 1990b.year omitted because of collinearity
+note: 2015.year omitted because of collinearity
+MLwiN 3.04 multilevel model                     Number of obs      =      1738
+Normal response model
+Estimation algorithm: RIGLS
+
+-----------------------------------------------------------
+                |   No. of       Observations per Group
+ Level Variable |   Groups    Minimum    Average    Maximum
+----------------+------------------------------------------
+         c_code |       75          1       23.2         26
+-----------------------------------------------------------
+
+Run time (seconds)        =       1.33
+Number of iterations      =          4
+Log restricted-likelihood = -2456.2596
+Restricted-deviance       =  4912.5191
+------------------------------------------------------------------------------
+       co2pc |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+        cons |   3.692562   .4541142    8.13    0.000     2.802514    4.582609
+fh_democr~um |   .0756332   .0200282    3.78    0.000     .0363785    .1148878
+    clngdppc |   2.033839   .1306059   15.57    0.000     1.777856    2.289822
+      ctrade |  -.0042791   .0011594   -3.69    0.000    -.0065515   -.0020067
+      c_year |  -.0338867   .0070422   -4.81    0.000    -.0476892   -.0200842
+  _1991_year |   .0878499   .1662865    0.53    0.597    -.2380657    .4137655
+  _1992_year |   .1368814   .1598625    0.86    0.392    -.1764433    .4502061
+  _1993_year |    .178401   .1559491    1.14    0.253    -.1272537    .4840556
+  _1994_year |   .1896169    .153241    1.24    0.216    -.1107299    .4899637
+  _1995_year |    .095453   .1493319    0.64    0.523    -.1972321    .3881381
+  _1996_year |   .1373868   .1468084    0.94    0.349    -.1503524    .4251259
+  _1997_year |   .1302727   .1440191    0.90    0.366    -.1519996    .4125449
+  _1998_year |   .0990499    .142002    0.70    0.485    -.1792688    .3773687
+  _1999_year |   .1331219   .1402927    0.95    0.343    -.1418467    .4080906
+  _2000_year |   .1491901   .1369089    1.09    0.276    -.1191464    .4175265
+  _2001_year |   .1875541   .1356631    1.38    0.167    -.0783406    .4534488
+  _2002_year |    .164312     .13423    1.22    0.221     -.098774    .4273981
+  _2003_year |   .3509832     .13378    2.62    0.009     .0887792    .6131872
+  _2004_year |   .4067602   .1337219    3.04    0.002     .1446702    .6688503
+  _2005_year |   .3409412   .1344648    2.54    0.011      .077395    .6044874
+  _2006_year |   .3079673   .1336074    2.31    0.021     .0461016    .5698329
+  _2007_year |    .257307     .13437    1.91    0.056    -.0060535    .5206674
+  _2008_year |   .2968721   .1354665    2.19    0.028     .0313625    .5623816
+  _2009_year |    .092936   .1354781    0.69    0.493    -.1725963    .3584683
+  _2010_year |   .2443573   .1370592    1.78    0.075    -.0242738    .5129885
+  _2011_year |   .2322956   .1389063    1.67    0.094    -.0399558     .504547
+  _2012_year |   .2913759   .1409732    2.07    0.039     .0150735    .5676783
+  _2013_year |   .2161237   .1425701    1.52    0.130    -.0633087     .495556
+  _2014_year |   .0918445   .1451253    0.63    0.527     -.192596    .3762849
+------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------
+   Random-effects Parameters |   Estimate   Std. Err.     [95% Conf. Interval]
+-----------------------------+------------------------------------------------
+Level 2: c_code              |
+                   var(cons) |   12.29125   2.006262      8.359045    16.22345
+-----------------------------+------------------------------------------------
+Level 1: year                |
+                   var(cons) |   .7822002   .0271347      .7290172    .8353832
+------------------------------------------------------------------------------
+
+. 
+. estimates store Mod1_RE
+
+. 
+. outreg2 using output_co2dem1, dec(3) excel label alpha(0.001, 0.01, 0.05, 0.1) symbol(***, **, *, ^) addtext(Year FE, Ye
+> s) ctitle(Model 1:RE) drop(i.year) append
+output_co2dem1.xml
+dir : seeout
+
+. 
+. runmlwin co2pc cons fh_democracy_sumw lngdppcw tradew yearw fh_democracy_sum_mean clngdppc_mean ctrade_mean i.year if co
+> untryname!="Qatar", level2(c_code: cons) level1(year: cons) nopause rigls
+ 
+note: 1990b.year omitted because of collinearity
+MLwiN 3.04 multilevel model                     Number of obs      =      1738
+Normal response model
+Estimation algorithm: RIGLS
+
+-----------------------------------------------------------
+                |   No. of       Observations per Group
+ Level Variable |   Groups    Minimum    Average    Maximum
+----------------+------------------------------------------
+         c_code |       75          1       23.2         26
+-----------------------------------------------------------
+
+Run time (seconds)        =       1.49
+Number of iterations      =          4
+Log restricted-likelihood = -2440.4012
+Restricted-deviance       =  4880.8024
+------------------------------------------------------------------------------
+       co2pc |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+        cons |   4.301747   1.981861    2.17    0.030     .4173702    8.186123
+fh_democra~w |   .0764266   .0203304    3.76    0.000     .0365796    .1162735
+    lngdppcw |   1.824454   .1385016   13.17    0.000     1.552996    2.095912
+      tradew |  -.0046014   .0011721   -3.93    0.000    -.0068986   -.0023042
+       yearw |  -.1772054   .1276883   -1.39    0.165    -.4274699    .0730591
+fh_de~m_mean |  -.1961741   .1088502   -1.80    0.072    -.4095167    .0171684
+clngdppc_m~n |   4.181685   .3887522   10.76    0.000     3.419744    4.943625
+ ctrade_mean |    .000063   .0076974    0.01    0.993    -.0150236    .0151496
+  _1991_year |   .2283425    .212257    1.08    0.282    -.1876736    .6443586
+  _1992_year |    .427946   .3064031    1.40    0.163     -.172593    1.028485
+  _1993_year |   .6136184    .417259    1.47    0.141    -.2041942    1.431431
+  _1994_year |   .7667772    .536872    1.43    0.153    -.2854726    1.819027
+  _1995_year |   .8208474   .6591366    1.25    0.213    -.4710365    2.112731
+  _1996_year |   1.010967   .7833639    1.29    0.197    -.5243976    2.546332
+  _1997_year |   1.152692   .9084303    1.27    0.204    -.6277983    2.933183
+  _1998_year |   1.268818   1.034223    1.23    0.220     -.758221    3.295857
+  _1999_year |   1.450206   1.160424    1.25    0.211    -.8241831    3.724596
+  _2000_year |   1.618169   1.286594    1.26    0.208    -.9035101    4.139847
+  _2001_year |   1.802711   1.413301    1.28    0.202    -.9673081    4.572729
+  _2002_year |   1.926359   1.540065    1.25    0.211    -1.092112     4.94483
+  _2003_year |   2.260159   1.667066    1.36    0.175     -1.00723    5.527549
+  _2004_year |   2.469529   1.794154    1.38    0.169    -1.046948    5.986005
+  _2005_year |   2.555556   1.921269    1.33    0.183    -1.210062    6.321174
+  _2006_year |   2.674294   2.048141    1.31    0.192    -1.339989    6.688577
+  _2007_year |   2.776801   2.175405    1.28    0.202    -1.486914    7.040516
+  _2008_year |   2.965505   2.302719    1.29    0.198     -1.54774     7.47875
+  _2009_year |   2.898603   2.429821    1.19    0.233    -1.863758    7.660964
+  _2010_year |   3.200515   2.557194    1.25    0.211    -1.811493    8.212523
+  _2011_year |    3.34022    2.68446    1.24    0.213    -1.921226    8.601665
+  _2012_year |   3.546768    2.81188    1.26    0.207    -1.964417    9.057952
+  _2013_year |   3.617078   2.939003    1.23    0.218    -2.143263    9.377418
+  _2014_year |   3.639643   3.066462    1.19    0.235    -2.370512    9.649798
+  _2015_year |   3.694952   3.193951    1.16    0.247    -2.565078    9.954981
+------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------
+   Random-effects Parameters |   Estimate   Std. Err.     [95% Conf. Interval]
+-----------------------------+------------------------------------------------
+Level 2: c_code              |
+                   var(cons) |   8.731199   1.432903       5.92276    11.53964
+-----------------------------+------------------------------------------------
+Level 1: year                |
+                   var(cons) |   .7811682   .0270915        .72807    .8342665
+------------------------------------------------------------------------------
+
+. 
+. estimates store Mod1_REwb
+
+. 
+. outreg2 using output_co2dem1, dec(3) excel label alpha(0.001, 0.01, 0.05, 0.1) symbol(***, **, *, ^) addtext(Year FE, Ye
+> s) ctitle(Model 1:REWB) drop(i.year) append
+output_co2dem1.xml
+dir : seeout
+
+. 
+. xtreg co2pc fh_democracy_sum clngdppc ctrade c_year cpop curban crenew cforest cannexI cisland clatitude i.year if count
+> ryname!="Qatar", fe
+no room to add more variables
+    Up to 2,048 variables are allowed with this version of Stata.  Versions are available that allow up to 32,767
+    variables.
+r(900);
+
+. 
+. estimates store Mod2_FE
+last estimation results not found, nothing to store
+r(301);
+
+. 
+. outreg2 using output_FH2, dec(3) excel label alpha(0.001, 0.01, 0.05, 0.1) symbol(***, **, *, ^) addtext(Year FE, Yes) c
+> title(Model 2:FE) drop(i.year) append
+output_FH2.xml
+dir : seeout
+
+. 
+. runmlwin co2pc cons fh_democracy_sum clngdppc ctrade c_year cpop curban crenew cforest cannexI cisland clatitude i.year 
+> if countryname!="Qatar", level2(c_code: cons) level1(year: cons) nopause rigls
+ 
+note: 1990b.year omitted because of collinearity
+note: 2015.year omitted because of collinearity
+MLwiN 3.04 multilevel model                     Number of obs      =      1738
+Normal response model
+Estimation algorithm: RIGLS
+
+-----------------------------------------------------------
+                |   No. of       Observations per Group
+ Level Variable |   Groups    Minimum    Average    Maximum
+----------------+------------------------------------------
+         c_code |       75          1       23.2         26
+-----------------------------------------------------------
+
+Run time (seconds)        =       1.18
+Number of iterations      =          4
+Log restricted-likelihood = -2407.8032
+Restricted-deviance       =  4815.6064
+------------------------------------------------------------------------------
+       co2pc |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+        cons |   3.933369   .3918272   10.04    0.000     3.165402    4.701336
+fh_democr~um |   .0543737   .0197784    2.75    0.006     .0156087    .0931387
+    clngdppc |   1.700362   .1392721   12.21    0.000     1.427394    1.973331
+      ctrade |  -.0045396   .0011369   -3.99    0.000     -.006768   -.0023112
+      c_year |  -.0452133   .0074046   -6.11    0.000     -.059726   -.0307005
+        cpop |   1.22e-09   9.81e-10    1.25    0.213    -7.00e-10    3.15e-09
+      curban |    .037347   .0090659    4.12    0.000     .0195782    .0551158
+      crenew |  -.0186558    .004626   -4.03    0.000    -.0277226   -.0095889
+     cforest |  -.0263038   .0103232   -2.55    0.011    -.0465369   -.0060707
+     cannexI |   4.044742   .9480808    4.27    0.000     2.186537    5.902946
+     cisland |  -.9845731   .9735549   -1.01    0.312    -2.892706    .9235595
+   clatitude |  -.1673983   .4057828   -0.41    0.680    -.9627181    .6279214
+  _1991_year |   .0909866   .1632648    0.56    0.577    -.2290066    .4109798
+  _1992_year |   .1287378   .1569714    0.82    0.412    -.1789205    .4363962
+  _1993_year |   .1546704   .1531794    1.01    0.313    -.1455557    .4548965
+  _1994_year |    .150604   .1505357    1.00    0.317    -.1444406    .4456487
+  _1995_year |    .049555   .1467296    0.34    0.736    -.2380297    .3371398
+  _1996_year |   .1021425   .1442445    0.71    0.479    -.1805715    .3848565
+  _1997_year |   .0803213   .1415036    0.57    0.570    -.1970206    .3576633
+  _1998_year |   .0478346   .1395476    0.34    0.732    -.2256737    .3213429
+  _1999_year |   .0830545    .137862    0.60    0.547    -.1871502    .3532591
+  _2000_year |   .1052061   .1345188    0.78    0.434     -.158446    .3688582
+  _2001_year |   .1348894   .1333632    1.01    0.312    -.1264978    .3962765
+  _2002_year |   .1226849   .1318731    0.93    0.352    -.1357817    .3811515
+  _2003_year |   .3095271    .131437    2.35    0.019     .0519153     .567139
+  _2004_year |   .3746034   .1313541    2.85    0.004      .117154    .6320528
+  _2005_year |   .3191962   .1320395    2.42    0.016     .0604035     .577989
+  _2006_year |    .298163    .131175    2.27    0.023     .0410648    .5552612
+  _2007_year |   .2491192   .1319444    1.89    0.059     -.009487    .5077253
+  _2008_year |   .2970417   .1329962    2.23    0.026     .0363739    .5577094
+  _2009_year |   .0802188   .1330057    0.60    0.546    -.1804676    .3409053
+  _2010_year |   .2362628   .1345529    1.76    0.079    -.0274561    .4999817
+  _2011_year |   .2267176   .1363652    1.66    0.096    -.0405532    .4939884
+  _2012_year |   .2877624   .1383877    2.08    0.038     .0165275    .5589972
+  _2013_year |   .2213362   .1399636    1.58    0.114    -.0529873    .4956597
+  _2014_year |   .1007086   .1424777    0.71    0.480    -.1785425    .3799598
+------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------
+   Random-effects Parameters |   Estimate   Std. Err.     [95% Conf. Interval]
+-----------------------------+------------------------------------------------
+Level 2: c_code              |
+                   var(cons) |   8.399827   1.375261      5.704365    11.09529
+-----------------------------+------------------------------------------------
+Level 1: year                |
+                   var(cons) |    .753802   .0261457      .7025573    .8050467
+------------------------------------------------------------------------------
+
+. 
+. estimates store Mod2_RE
+
+. 
+. outreg2 using output_FH2, dec(3) excel label alpha(0.001, 0.01, 0.05, 0.1) symbol(***, **, *, ^) addtext(Year FE, Yes) c
+> title(Model 2:RE) drop(i.year) append
+output_FH2.xml
+dir : seeout
+
+. 
+. runmlwin co2pc cons fh_democracy_sumw lngdppcw tradew yearw popw urbanw reneww forestw annexIw islandw latitudew i.year 
+> fh_democracy_sum_mean clngdppc_mean ctrade_mean cpop_mean curban_mean crenew_mean cforest_mean cannexI_mean cisland_mean
+>  clatitude_mean if countryname!="Qatar", level2(c_code: cons) level1(year: cons) nopause rigls
+ 
+note: annexIw omitted because of collinearity
+note: islandw omitted because of collinearity
+note: 1990b.year omitted because of collinearity
+MLwiN 3.04 multilevel model                     Number of obs      =      1738
+Normal response model
+Estimation algorithm: RIGLS
+
+-----------------------------------------------------------
+                |   No. of       Observations per Group
+ Level Variable |   Groups    Minimum    Average    Maximum
+----------------+------------------------------------------
+         c_code |       75          1       23.2         26
+-----------------------------------------------------------
+
+Run time (seconds)        =       1.27
+Number of iterations      =          4
+Log restricted-likelihood = -2400.5071
+Restricted-deviance       =  4801.0141
+------------------------------------------------------------------------------
+       co2pc |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+        cons |   4.408597   1.944573    2.27    0.023     .5973038    8.219891
+fh_democra~w |   .0602181   .0201161    2.99    0.003     .0207913    .0996449
+    lngdppcw |   1.738805   .1466859   11.85    0.000     1.451306    2.026304
+      tradew |  -.0048915   .0011573   -4.23    0.000    -.0071599   -.0026232
+       yearw |  -.1896499   .1254963   -1.51    0.131    -.4356182    .0563184
+        popw |   1.13e-09   1.20e-09    0.94    0.349    -1.23e-09    3.48e-09
+      urbanw |   .0482752   .0103029    4.69    0.000     .0280819    .0684684
+      reneww |  -.0164121   .0048783   -3.36    0.001    -.0259735   -.0068508
+     forestw |  -.0448546   .0146682   -3.06    0.002    -.0736038   -.0161054
+   latitudew |    1280653    5167218    0.25    0.804     -8846908    1.14e+07
+  _1991_year |    .229602   .2085082    1.10    0.271    -.1790665    .6382705
+  _1992_year |   .4036721   .3010924    1.34    0.180    -.1864582    .9938025
+  _1993_year |   .5702262   .4099993    1.39    0.164    -.2333577     1.37381
+  _1994_year |   .7080741   .5275196    1.34    0.180    -.3258454    1.741994
+  _1995_year |   .7454028   .6476422    1.15    0.250    -.5239525    2.014758
+  _1996_year |   .9360714   .7696943    1.22    0.224    -.5725018    2.444645
+  _1997_year |   1.057391   .8925694    1.18    0.236     -.692013    2.806795
+  _1998_year |   1.166632   1.016162    1.15    0.251    -.8250085    3.158272
+  _1999_year |    1.34219   1.140154    1.18    0.239    -.8924697     3.57685
+  _2000_year |   1.504488    1.26412    1.19    0.234    -.9731407    3.982117
+  _2001_year |   1.675055   1.388615    1.21    0.228    -1.046581    4.396692
+  _2002_year |   1.799896   1.513137    1.19    0.234    -1.165798    4.765591
+  _2003_year |    2.12701   1.637916    1.30    0.194    -1.083246    5.337267
+  _2004_year |   2.332831   1.762775    1.32    0.186    -1.122145    5.787806
+  _2005_year |    2.41546   1.887669    1.28    0.201    -1.284304    6.115224
+  _2006_year |   2.533253   2.012283    1.26    0.208    -1.410749    6.477254
+  _2007_year |   2.625391   2.137319    1.23    0.219    -1.563677     6.81446
+  _2008_year |   2.813432   2.262404    1.24    0.214      -1.6208    7.247663
+  _2009_year |   2.734156   2.387289    1.15    0.252    -1.944844    7.413156
+  _2010_year |   3.030736   2.512432    1.21    0.228    -1.893541    7.955012
+  _2011_year |   3.163779   2.637512    1.20    0.230    -2.005648    8.333207
+  _2012_year |   3.366396   2.762703    1.22    0.223    -2.048402    8.781194
+  _2013_year |   3.438209   2.887636    1.19    0.234    -2.221454    9.097873
+  _2014_year |   3.457957   3.012866    1.15    0.251    -2.447151    9.363066
+  _2015_year |   3.497429   3.138127    1.11    0.265    -2.653188    9.648046
+fh_de~m_mean |  -.2026717     .12064   -1.68    0.093    -.4391216    .0337783
+clngdppc_m~n |   3.285937   .7845029    4.19    0.000      1.74834    4.823534
+ ctrade_mean |   .0003413   .0077386    0.04    0.965     -.014826    .0155086
+   cpop_mean |   1.60e-09   2.16e-09    0.74    0.459    -2.63e-09    5.82e-09
+ curban_mean |  -.0202315   .0300544   -0.67    0.501     -.079137     .038674
+ crenew_mean |  -.0099936   .0190846   -0.52    0.601    -.0473987    .0274114
+cforest_mean |  -.0063434   .0150401   -0.42    0.673    -.0358215    .0231348
+cannexI_mean |   7.873529   2.432159    3.24    0.001     3.106585    12.64047
+cisland_mean |   -.294385   1.131579   -0.26    0.795    -2.512239    1.923469
+clatitude_~n |   -.031719   .4708142   -0.07    0.946     -.954498    .8910599
+------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------
+   Random-effects Parameters |   Estimate   Std. Err.     [95% Conf. Interval]
+-----------------------------+------------------------------------------------
+Level 2: c_code              |
+                   var(cons) |   7.902428   1.291263        5.3716    10.43326
+-----------------------------+------------------------------------------------
+Level 1: year                |
+                   var(cons) |    .753305   .0261257      .7020995    .8045105
+------------------------------------------------------------------------------
+
+. 
+. estimates store Mod2_REwb
+
+. 
+. outreg2 using output_FH2, dec(3) excel label alpha(0.001, 0.01, 0.05, 0.1) symbol(***, **, *, ^) addtext(Year FE, Yes) c
+> title(Model 2:REWB) drop(i.year) append
+output_FH2.xml
+dir : seeout
+
+. 
+. estimates table Mod1_REnull Mod1_FE Mod1_RE Mod1_REwb Mod2_FE Mod2_RE Mod2_REwb, se stats(deviance)
+estimation result Mod2_FE not found
+r(111);
+
+. exit, clear

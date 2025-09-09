@@ -1,0 +1,86 @@
+clear all
+set more off 
+pause on
+use "C:\Users\Muinul\Desktop\muinul.democracy.dta", clear
+*Log-transformed of CO2 per capita
+gen lnco2pc = log(co2pc)
+*Log-transformed of GDP per capita
+gen lngdppc = log(gdppc)
+* GDP per capita squared
+gen lngdppc2 = lngdppc*lngdppc
+*Log-transformed of Population, Total
+gen lnpop = log(pop)
+encode countrycode, gen(c_code)
+drop if missing(v2x_polyarchy)
+drop if missing(co2pc)
+drop if missing(lngdppc)
+drop if missing(trade)
+drop if missing(pop)
+drop if missing(urban)
+drop if missing(renew)
+drop if missing(forest)
+drop if missing(annexI)
+drop if missing(island)
+drop if missing(latitude)
+order co2pc year v2x_polyarchy lngdppc trade pop urban renew forest annexI island latitude, last
+foreach v of varlist co2pc-latitude{
+    egen `v'_m=mean(`v'), by(c_code)
+}
+foreach v of varlist year-latitude {
+    gen `v'_devm=`v'-`v'_m
+}
+
+global id c_code
+global t year
+sort $id $t
+xtset $id $t, yearly
+xtdescribe
+
+gen cons=1
+xtreg co2pc cons v2x_polyarchy_devm lngdppc_devm trade_devm year_devm pop_devm urban_devm renew_devm forest_devm annexI_devm island_devm latitude_devm i.year v2x_polyarchy_m lngdppc_m trade_m pop_m urban_m renew_m forest_m annexI_m island_m latitude_m, re vce (cluster c_code)
+
+predict e, e
+predict u, u
+predict ue, ue  
+kdensity e, norm
+kdensity u, norm
+kdensity ue, norm
+pnorm e
+pnorm u
+pnorm ue
+qnorm e
+qnorm u
+qnorm ue, mlabel(countryname)
+predict e1 if countryname!="Qatar", e
+predict u1 if countryname!="Qatar", u
+predict ue1 if countryname!="Qatar", ue
+kdensity e1 if countryname!="Qatar", norm
+kdensity u1 if countryname!="Qatar", norm
+kdensity ue1 if countryname!="Qatar", norm
+pnorm e1 if countryname!="Qatar"
+pnorm u1 if countryname!="Qatar"
+pnorm ue1 if countryname!="Qatar"
+qnorm e1 if countryname!="Qatar"
+qnorm u1 if countryname!="Qatar"
+qnorm ue1 if countryname!="Qatar", mlabel(countryname)
+reg co2pc cons v2x_polyarchy_devm lngdppc_devm trade_devm year_devm pop_devm urban_devm renew_devm forest_devm annexI_devm island_devm latitude_devm i.year v2x_polyarchy_m lngdppc_m trade_m pop_m urban_m renew_m forest_m annexI_m island_m latitude_m
+lvr2plot, mlabel(countryname)
+
+*Random Effect Within-Between Estimate (Not using mLWin)*
+
+xtreg co2pc cons v2x_polyarchy_devm lngdppc_devm trade_devm year_devm pop_devm urban_devm renew_devm forest_devm annexI_devm island_devm latitude_devm i.year v2x_polyarchy_m lngdppc_m trade_m pop_m urban_m renew_m forest_m annexI_m island_m latitude_m  if countryname!="Qatar", re vce (cluster c_code)
+estimates store model
+outreg2 using output_co2dem, dec(3) excel label alpha(0.001, 0.01, 0.05, 0.1) symbol(***, **, *, ^) addtext(Year FE, Yes) ctitle(Model REWB) drop(i.year) append
+
+*Marginal Effect Graph*
+
+*Between-Variation*
+margins, at(v2x_polyarchy_m=(0 (.1) 1)) vsquish
+marginsplot, recast(line) recastci(rarea) title("Between Variation") name (margins1, replace)
+    
+*Within-Variation*
+*Calcualted adjusted means at fixed values of father's education*
+margins, at(v2x_polyarchy_devm=(0 (.1) 1)) vsquish
+marginsplot, recast(line) recastci(rarea) title("Within Variation") name (margins2, replace)
+
+graph combine margins1 margins2, nocopies ycommon

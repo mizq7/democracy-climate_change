@@ -1,0 +1,1010 @@
+--------------------------------------------------------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  C:\Users\Muinul\Google Drive\Muinul\00_DISSERTATION\00_DISSERTATION_final\Supplemental Materials_Original\Log
+>  file_Empirical Analysis_Final Version\Log file_Democracy_BTI_REWB_Oct11,2020.log
+  log type:  text
+ opened on:  12 Oct 2020, 00:15:53
+
+. clear all
+
+. 
+. set more off 
+
+. 
+. pause on
+
+. 
+. ssc install runmlwin, replace
+proxy host not found
+http://fmwww.bc.edu/repec/bocode/r/ either
+  1)  is not a valid URL, or
+  2)  could not be contacted, or
+  3)  is not a Stata download site (has no stata.toc file).
+r(660);
+
+. 
+. global MLwiN_path "C:\Program Files\MLwiN v3.04\mlwin.exe"
+
+. 
+. use "C:\Users\Muinul\Desktop\muinul.democracy.dta", clear
+
+. 
+. * ln CO2 per capita
+
+. 
+. gen lnco2pc = log(co2pc)
+(30936 missing values generated)
+
+. 
+. * ln GDP per capita
+
+. 
+. gen lngdppc = log(gdppc)
+(36137 missing values generated)
+
+. 
+. * GDP per capita squared
+
+. 
+. gen lngdppc2 = lngdppc*lngdppc
+(36137 missing values generated)
+
+. 
+. *ln Population, Total
+
+. 
+. gen lnpop = log(pop)
+(28445 missing values generated)
+
+. 
+. 
+. 
+. *Creating constant variable
+
+. 
+. gen cons=1
+
+. 
+. egen dem_stat_mean = mean(dem_stat), by(c_code)
+(24037 missing values generated)
+
+. 
+. egen lngdppc_mean = mean(lngdppc), by(c_code)
+(14968 missing values generated)
+
+. 
+. egen trade_mean = mean(trade), by(c_code)
+(14168 missing values generated)
+
+. 
+. egen pop_mean = mean(pop), by(c_code)
+(13015 missing values generated)
+
+. 
+. egen urban_mean = mean(urban), by(c_code)
+(13137 missing values generated)
+
+. 
+. egen renew_mean = mean(renew), by(c_code)
+(13259 missing values generated)
+
+. 
+. egen forest_mean = mean(forest), by(c_code)
+(13562 missing values generated)
+
+. 
+. egen annexI_mean = mean(annexI), by(c_code)
+(13428 missing values generated)
+
+. 
+. egen island_mean = mean(island), by(c_code)
+(13549 missing values generated)
+
+. 
+. egen latitude_mean = mean(latitude), by(c_code)
+(13777 missing values generated)
+
+. 
+. drop if missing(co2pc)
+(30935 observations deleted)
+
+. 
+. drop if missing(lngdppc)
+(5929 observations deleted)
+
+. 
+. drop if missing(trade)
+(329 observations deleted)
+
+. 
+. drop if missing(pop)
+(0 observations deleted)
+
+. 
+. drop if missing(urban)
+(9 observations deleted)
+
+. 
+. drop if missing(renew)
+(201 observations deleted)
+
+. 
+. drop if missing(forest)
+(100 observations deleted)
+
+. 
+. drop if missing(annexI)
+(416 observations deleted)
+
+. 
+. drop if missing(island)
+(0 observations deleted)
+
+. 
+. drop if missing(latitude)
+(22 observations deleted)
+
+. 
+. drop if missing(dem_stat)
+(3591 observations deleted)
+
+. 
+. egen dem_stat_mean_new = mean(dem_stat), by(c_code)
+
+. 
+. egen year_mean_new = mean(year), by(c_code)
+
+. 
+. egen lngdppc_mean_new = mean(lngdppc), by(c_code)
+
+. 
+. egen trade_mean_new = mean(trade), by(c_code)
+
+. 
+. egen pop_mean_new = mean(pop), by(c_code)
+
+. 
+. egen urban_mean_new = mean(urban), by(c_code)
+
+. 
+. egen renew_mean_new = mean(renew), by(c_code)
+
+. 
+. egen forest_mean_new = mean(forest), by(c_code)
+
+. 
+. egen annexI_mean_new = mean(annexI), by(c_code)
+
+. 
+. egen island_mean_new = mean(island), by(c_code)
+
+. 
+. egen latitude_mean_new = mean(latitude), by(c_code)
+
+. 
+. gen dem_statw = dem_stat - dem_stat_mean_new
+
+. 
+. gen yearw = year - year_mean_new
+
+. 
+. gen lngdppcw = lngdppc - lngdppc_mean_new 
+
+. 
+. gen tradew = trade - trade_mean_new 
+
+. 
+. gen popw = pop - pop_mean_new 
+
+. 
+. gen urbanw = urban - urban_mean_new 
+
+. 
+. gen reneww = renew - renew_mean_new 
+
+. 
+. gen forestw = forest - forest_mean_new 
+
+. 
+. gen annexIw = annexI - annexI_mean_new 
+
+. 
+. gen islandw = island - island_mean_new 
+
+. 
+. gen latitudew = latitude - latitude_mean_new
+
+. 
+. drop dem_stat_mean_new 
+
+. 
+. drop lngdppc_mean_new 
+
+. 
+. drop trade_mean_new 
+
+. 
+. drop pop_mean_new 
+
+. 
+. drop urban_mean_new 
+
+. 
+. drop renew_mean_new 
+
+. 
+. drop forest_mean_new 
+
+. 
+. drop annexI_mean_new 
+
+. 
+. drop island_mean_new 
+
+. 
+. drop latitude_mean_new
+
+. 
+. sum dem_stat, meanonly
+
+. 
+. gen cdem_stat = dem_stat - r(mean)
+
+. 
+. sum lngdppc, meanonly
+
+. 
+. gen clngdppc = lngdppc - r(mean)
+
+. 
+. sum year, meanonly
+
+. 
+. gen c_year = year - r(mean)
+
+. 
+. sum trade, meanonly
+
+. 
+. gen ctrade = trade - r(mean)
+
+. 
+. sum pop, meanonly
+
+. 
+. gen cpop = pop - r(mean)
+
+. 
+. sum urban, meanonly
+
+. 
+. gen curban = urban - r(mean)
+
+. 
+. sum renew, meanonly
+
+. 
+. gen crenew = renew - r(mean)
+
+. 
+. sum forest, meanonly
+
+. 
+. gen cforest = forest - r(mean)
+
+. 
+. sum annexI, meanonly
+
+. 
+. gen cannexI = annexI - r(mean)
+
+. 
+. sum island, meanonly
+
+. 
+. gen cisland = island - r(mean)
+
+. 
+. sum latitude, meanonly
+
+. 
+. gen clatitude = latitude - r(mean)
+
+. 
+. sum dem_stat_mean, meanonly
+
+. 
+. gen cdem_stat_mean = dem_stat_mean - r(mean)
+
+. 
+. sum lngdppc_mean, meanonly
+
+. 
+. gen clngdppc_mean = lngdppc_mean - r(mean)
+
+. 
+. sum trade_mean, meanonly
+
+. 
+. gen ctrade_mean = trade_mean - r(mean)
+
+. 
+. sum pop_mean, meanonly
+
+. 
+. gen cpop_mean = pop_mean - r(mean)
+
+. 
+. sum urban_mean, meanonly
+
+. 
+. gen curban_mean = urban_mean - r(mean)
+
+. 
+. sum renew_mean, meanonly
+
+. 
+. gen crenew_mean = renew_mean - r(mean)
+
+. 
+. sum forest_mean, meanonly
+
+. 
+. gen cforest_mean = forest_mean - r(mean)
+
+. 
+. sum annexI_mean, meanonly
+
+. 
+. gen cannexI_mean = annexI_mean - r(mean)
+
+. 
+. sum island_mean, meanonly
+
+. 
+. gen cisland_mean = island_mean - r(mean)
+
+. 
+. sum latitude_mean, meanonly
+
+. 
+. gen clatitude_mean = latitude_mean - r(mean)
+
+. 
+. order co2pc year dem_stat lngdppc trade pop urban renew forest annexI island latitude, last
+
+. 
+. foreach v of varlist co2pc-latitude{
+  2. 
+.     egen `v'_m=mean(`v'), by(c_code)
+  3. 
+. }
+
+. 
+. foreach v of varlist year-latitude {
+  2. 
+.     gen `v'_devm=`v'-`v'_m
+  3. 
+. }
+
+. 
+. matrix A = (1,1,0)
+
+. 
+. global id c_code
+
+. 
+. global t year
+
+. 
+. sort $id $t
+
+. 
+. xtset $id $t, yearly
+       panel variable:  c_code (unbalanced)
+        time variable:  year, 2006 to 2014, but with gaps
+                delta:  1 year
+
+. 
+. xtdescribe
+
+  c_code:  4, 5, ..., 396                                    n =        115
+    year:  2006, 2008, ..., 2014                             T =          5
+           Delta(year) = 1 year
+           Span(year)  = 9 periods
+           (c_code*year uniquely identifies each observation)
+
+Distribution of T_i:   min      5%     25%       50%       75%     95%     max
+                         2       4       5         5         5       5       5
+
+     Freq.  Percent    Cum. |  Pattern*
+ ---------------------------+----------
+      105     91.30   91.30 |  11111
+        6      5.22   96.52 |  .1111
+        3      2.61   99.13 |  ..111
+        1      0.87  100.00 |  ...11
+ ---------------------------+----------
+      115    100.00         |  XXXXX
+ --------------------------------------
+ *Each column represents 2 periods.
+
+
+. 
+. 
+. 
+. xtreg co2pc cons dem_statw lngdppcw tradew yearw popw urbanw reneww forestw annexIw islandw latitudew i.year dem_stat_me
+> an clngdppc_mean ctrade_mean cpop_mean curban_mean crenew_mean cforest_mean cannexI_mean cisland_mean clatitude_mean, vc
+> e (cluster c_code)
+note: cons omitted because of collinearity
+note: annexIw omitted because of collinearity
+note: islandw omitted because of collinearity
+
+Random-effects GLS regression                   Number of obs      =       560
+Group variable: c_code                          Number of groups   =       115
+
+R-sq:  within  = 0.1142                         Obs per group: min =         2
+       between = 0.6856                                        avg =       4.9
+       overall = 0.6649                                        max =         5
+
+                                                Wald chi2(23)      =    172.50
+corr(u_i, X)   = 0 (assumed)                    Prob > chi2        =    0.0000
+
+                                 (Std. Err. adjusted for 115 clusters in c_code)
+--------------------------------------------------------------------------------
+               |               Robust
+         co2pc |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+---------------+----------------------------------------------------------------
+          cons |          0  (omitted)
+     dem_statw |   .0158641   .0570531     0.28   0.781    -.0959579    .1276861
+      lngdppcw |   2.217049   .8894955     2.49   0.013     .4736698    3.960428
+        tradew |  -.0034339    .003951    -0.87   0.385    -.0111777    .0043098
+         yearw |  -2.274205   1.484708    -1.53   0.126    -5.184179    .6357684
+          popw |   6.16e-10   4.36e-09     0.14   0.888    -7.92e-09    9.15e-09
+        urbanw |   .0621235   .0345659     1.80   0.072    -.0056244    .1298714
+        reneww |  -.0130803   .0082778    -1.58   0.114    -.0293045    .0031438
+       forestw |  -.0131312    .025897    -0.51   0.612    -.0638883     .037626
+       annexIw |          0  (omitted)
+       islandw |          0  (omitted)
+     latitudew |   -9838038    4635352    -2.12   0.034    -1.89e+07   -752914.5
+               |
+          year |
+         2008  |   4.478493   2.973062     1.51   0.132    -1.348601    10.30559
+         2010  |   8.850631   5.925863     1.49   0.135    -2.763847    20.46511
+         2012  |   13.39932   8.923398     1.50   0.133    -4.090216    30.88886
+         2014  |   17.72461    11.8959     1.49   0.136     -5.59092    41.04014
+               |
+ dem_stat_mean |  -.8516877   .1886541    -4.51   0.000    -1.221443   -.4819324
+ clngdppc_mean |   4.592658   .9658214     4.76   0.000     2.699683    6.485633
+   ctrade_mean |   .0014228    .012958     0.11   0.913    -.0239745    .0268201
+     cpop_mean |   2.43e-09   1.16e-09     2.10   0.036     1.57e-10    4.69e-09
+   curban_mean |   .0547728   .0329317     1.66   0.096    -.0097722    .1193177
+   crenew_mean |   .0438231   .0256643     1.71   0.088    -.0064779    .0941241
+  cforest_mean |  -.0464547   .0171552    -2.71   0.007    -.0800782   -.0128313
+  cannexI_mean |   1.312782   2.197883     0.60   0.550     -2.99499    5.620555
+  cisland_mean |   .1813482   1.257386     0.14   0.885    -2.283083     2.64578
+clatitude_mean |   .3628069   .4073079     0.89   0.373    -.4355019    1.161116
+         _cons |  -.0155677   5.720358    -0.00   0.998    -11.22726    11.19613
+---------------+----------------------------------------------------------------
+       sigma_u |  3.6679334
+       sigma_e |  .69357527
+           rho |  .96547871   (fraction of variance due to u_i)
+--------------------------------------------------------------------------------
+
+. 
+. predict e, e
+
+. 
+. predict u, u
+
+. 
+. predict ue, ue  
+
+. 
+. kdensity e, norm
+
+. 
+. kdensity u, norm
+
+. 
+. kdensity ue, norm
+
+. 
+. pnorm e
+
+. 
+. pnorm u
+
+. 
+. pnorm ue
+
+. 
+. qnorm e
+
+. 
+. qnorm u
+
+. 
+. qnorm ue, mlabel(countryname)
+
+. 
+. predict e1 if countryname!="Qatar", e
+(3 missing values generated)
+
+. 
+. predict u1 if countryname!="Qatar", u
+(3 missing values generated)
+
+. 
+. predict ue1 if countryname!="Qatar", ue
+(3 missing values generated)
+
+. 
+. kdensity e1 if countryname!="Qatar", norm
+
+. 
+. kdensity u1 if countryname!="Qatar", norm
+
+. 
+. kdensity ue1 if countryname!="Qatar", norm
+
+. 
+. pnorm e1 if countryname!="Qatar"
+
+. 
+. pnorm u1 if countryname!="Qatar"
+
+. 
+. pnorm ue1 if countryname!="Qatar"
+
+. 
+. qnorm e1 if countryname!="Qatar"
+
+. 
+. qnorm u1 if countryname!="Qatar"
+
+. 
+. qnorm ue1 if countryname!="Qatar", mlabel(countryname)
+
+. 
+. reg co2pc cons dem_statw lngdppcw tradew yearw popw urbanw reneww forestw annexIw islandw latitudew i.year dem_stat_mean
+>  clngdppc_mean ctrade_mean cpop_mean curban_mean crenew_mean cforest_mean cannexI_mean cisland_mean clatitude_mean
+note: cons omitted because of collinearity
+note: annexIw omitted because of collinearity
+note: islandw omitted because of collinearity
+
+      Source |       SS       df       MS              Number of obs =     560
+-------------+------------------------------           F( 23,   536) =   46.52
+       Model |  12293.4607    23   534.49829           Prob > F      =  0.0000
+    Residual |  6158.80298   536  11.4903041           R-squared     =  0.6662
+-------------+------------------------------           Adj R-squared =  0.6519
+       Total |  18452.2637   559  33.0094162           Root MSE      =  3.3897
+
+--------------------------------------------------------------------------------
+         co2pc |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+---------------+----------------------------------------------------------------
+          cons |          0  (omitted)
+     dem_statw |   .0218066   .3618295     0.06   0.952    -.6889712    .7325844
+      lngdppcw |   2.277278   2.050812     1.11   0.267    -1.751337    6.305893
+        tradew |  -.0028761   .0124799    -0.23   0.818    -.0273917    .0216395
+         yearw |  -2.481069   .4233418    -5.86   0.000    -3.312681   -1.649456
+          popw |   5.06e-10   2.99e-08     0.02   0.987    -5.83e-08    5.93e-08
+        urbanw |   .0616298   .1557647     0.40   0.693    -.2443545     .367614
+        reneww |  -.0134735   .0525094    -0.26   0.798    -.1166229     .089676
+       forestw |  -.0140175   .1727981    -0.08   0.935     -.353462     .325427
+       annexIw |          0  (omitted)
+       islandw |          0  (omitted)
+     latitudew |   -9228250    2349835    -3.93   0.000    -1.38e+07    -4612235
+               |
+          year |
+         2008  |   4.813272   .9397032     5.12   0.000     2.967319    6.659224
+         2010  |   9.699436   1.690841     5.74   0.000     6.377947    13.02092
+         2012  |   14.60529   2.492452     5.86   0.000     9.709121    19.50147
+         2014  |    19.3438   3.314134     5.84   0.000     12.83351    25.85408
+               |
+ dem_stat_mean |  -.7938662   .0907679    -8.75   0.000    -.9721706   -.6155617
+ clngdppc_mean |   4.158753   .3232669    12.86   0.000     3.523728    4.793778
+   ctrade_mean |   .0036219   .0044344     0.82   0.414    -.0050891    .0123329
+     cpop_mean |   2.38e-09   1.15e-09     2.07   0.039     1.26e-10    4.63e-09
+   curban_mean |    .045211   .0137573     3.29   0.001     .0181861    .0722358
+   crenew_mean |    .033746   .0096737     3.49   0.001      .014743     .052749
+  cforest_mean |  -.0416555   .0082289    -5.06   0.000    -.0578204   -.0254905
+  cannexI_mean |   1.635507   1.120365     1.46   0.145    -.5653369    3.836351
+  cisland_mean |   .2760808   .6149491     0.45   0.654    -.9319251    1.484087
+clatitude_mean |   .3631763   .2053269     1.77   0.078    -.0401677    .7665203
+         _cons |  -1.181386   1.853759    -0.64   0.524    -4.822911    2.460138
+--------------------------------------------------------------------------------
+
+. 
+. lvr2plot, mlabel(countryname)
+
+. 
+. runmlwin co2pc cons if countryname!="Qatar", level2(c_code: cons) level1(year: cons) nopause rigls
+ 
+MLwiN 3.04 multilevel model                     Number of obs      =       557
+Normal response model
+Estimation algorithm: RIGLS
+
+-----------------------------------------------------------
+                |   No. of       Observations per Group
+ Level Variable |   Groups    Minimum    Average    Maximum
+----------------+------------------------------------------
+         c_code |      114          2        4.9          5
+-----------------------------------------------------------
+
+Run time (seconds)        =       0.89
+Number of iterations      =          3
+Log restricted-likelihood = -915.00286
+Restricted-deviance       =  1830.0057
+------------------------------------------------------------------------------
+       co2pc |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+        cons |   3.760609   .4787843    7.85    0.000     2.822208    4.699009
+------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------
+   Random-effects Parameters |   Estimate   Std. Err.     [95% Conf. Interval]
+-----------------------------+------------------------------------------------
+Level 2: c_code              |
+                   var(cons) |   26.02772   3.456489      19.25313    32.80231
+-----------------------------+------------------------------------------------
+Level 1: year                |
+                   var(cons) |   .5058675   .0340041      .4392207    .5725143
+------------------------------------------------------------------------------
+
+. 
+. estimates store Mod1_REnull
+
+. 
+. outreg2 using output_co2btiwb1, dec(3) excel label alpha (0.001, 0.01, 0.05, 0.1) symbol(***, **, *, ^) ctitle(Model 1:N
+> ull) drop(i.year) replace
+output_co2btiwb1.xml
+dir : seeout
+
+. 
+. xtreg co2pc dem_stat clngdppc ctrade c_year i.year if countryname!="Qatar", fe
+note: 2014.year omitted because of collinearity
+
+Fixed-effects (within) regression               Number of obs      =       557
+Group variable: c_code                          Number of groups   =       114
+
+R-sq:  within  = 0.1100                         Obs per group: min =         2
+       between = 0.5037                                        avg =       4.9
+       overall = 0.4951                                        max =         5
+
+                                                F(7,436)           =      7.70
+corr(u_i, Xb)  = 0.2720                         Prob > F           =    0.0000
+
+------------------------------------------------------------------------------
+       co2pc |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+    dem_stat |   .0110094   .0717378     0.15   0.878    -.1299856    .1520044
+    clngdppc |   2.459165   .3976141     6.18   0.000     1.677686    3.240644
+      ctrade |  -.0036685   .0024876    -1.47   0.141    -.0085577    .0012207
+      c_year |  -.0399839   .0155762    -2.57   0.011    -.0705977   -.0093702
+             |
+        year |
+       2008  |   .0528698   .0843639     0.63   0.531    -.1129407    .2186803
+       2010  |   .0204179   .0790368     0.26   0.796    -.1349226    .1757583
+       2012  |   .1139278   .0813649     1.40   0.162    -.0459883     .273844
+       2014  |          0  (omitted)
+             |
+       _cons |    3.68126   .4289341     8.58   0.000     2.838224    4.524295
+-------------+----------------------------------------------------------------
+     sigma_u |  3.7560263
+     sigma_e |  .67633192
+         rho |  .96859458   (fraction of variance due to u_i)
+------------------------------------------------------------------------------
+F test that all u_i=0:     F(113, 436) =   112.38            Prob > F = 0.0000
+
+. 
+. estimates store Mod1_FE 
+
+. 
+. outreg2 using output_co2btiwb1, dec(3) excel label alpha(0.001, 0.01, 0.05, 0.1) symbol(***, **, *, ^) addtext(Year FE, 
+> Yes) ctitle(Model 1:FE) drop(i.year) append
+output_co2btiwb1.xml
+dir : seeout
+
+. 
+. runmlwin co2pc cons dem_stat clngdppc ctrade c_year i.year if countryname!="Qatar", level2(c_code: cons) level1(year: co
+> ns) nopause rigls
+ 
+note: 2006b.year omitted because of collinearity
+note: 2014.year omitted because of collinearity
+MLwiN 3.04 multilevel model                     Number of obs      =       557
+Normal response model
+Estimation algorithm: RIGLS
+
+-----------------------------------------------------------
+                |   No. of       Observations per Group
+ Level Variable |   Groups    Minimum    Average    Maximum
+----------------+------------------------------------------
+         c_code |      114          2        4.9          5
+-----------------------------------------------------------
+
+Run time (seconds)        =       0.93
+Number of iterations      =          4
+Log restricted-likelihood = -849.74347
+Restricted-deviance       =  1699.4869
+------------------------------------------------------------------------------
+       co2pc |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+        cons |   4.352338   .5184328    8.40    0.000     3.336228    5.368447
+    dem_stat |  -.0925143   .0668887   -1.38    0.167    -.2236137    .0385852
+    clngdppc |   3.147283   .2491071   12.63    0.000     2.659042    3.635524
+      ctrade |  -.0026717   .0023516   -1.14    0.256    -.0072809    .0019374
+      c_year |  -.0570592   .0133008   -4.29    0.000    -.0831284     -.03099
+  _2008_year |    .042534   .0840242    0.51    0.613    -.1221504    .2072184
+  _2010_year |   .0266752   .0793482    0.34    0.737    -.1288445    .1821949
+  _2012_year |    .105203   .0816221    1.29    0.197    -.0547733    .2651793
+------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------
+   Random-effects Parameters |   Estimate   Std. Err.     [95% Conf. Interval]
+-----------------------------+------------------------------------------------
+Level 2: c_code              |
+                   var(cons) |   12.52239   1.663436      9.262114    15.78266
+-----------------------------+------------------------------------------------
+Level 1: year                |
+                   var(cons) |   .4616511   .0310667      .4007615    .5225407
+------------------------------------------------------------------------------
+
+. 
+. estimates store Mod1_RE
+
+. 
+. outreg2 using output_co2btiwb1, dec(3) excel label alpha(0.001, 0.01, 0.05, 0.1) symbol(***, **, *, ^) addtext(Year FE, 
+> Yes) ctitle(Model 1:RE) drop(i.year) append
+output_co2btiwb1.xml
+dir : seeout
+
+. 
+. runmlwin co2pc cons dem_statw lngdppcw tradew yearw dem_stat_mean clngdppc_mean ctrade_mean i.year if countryname!="Qata
+> r", level2(c_code: cons) level1(year: cons) nopause rigls
+ 
+note: 2006b.year omitted because of collinearity
+MLwiN 3.04 multilevel model                     Number of obs      =       557
+Normal response model
+Estimation algorithm: RIGLS
+
+-----------------------------------------------------------
+                |   No. of       Observations per Group
+ Level Variable |   Groups    Minimum    Average    Maximum
+----------------+------------------------------------------
+         c_code |      114          2        4.9          5
+-----------------------------------------------------------
+
+Run time (seconds)        =       1.09
+Number of iterations      =          4
+Log restricted-likelihood = -832.94412
+Restricted-deviance       =  1665.8882
+------------------------------------------------------------------------------
+       co2pc |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+        cons |   5.234561   3.219335    1.63    0.104    -1.075219    11.54434
+   dem_statw |   .0109777   .0717404    0.15    0.878     -.129631    .1515864
+    lngdppcw |   2.458915   .3976284    6.18    0.000     1.679577    3.238252
+      tradew |  -.0036696   .0024877   -1.48    0.140    -.0085454    .0012062
+       yearw |  -.8283962   .7042016   -1.18    0.239    -2.208606    .5518136
+dem_stat_m~n |  -.7888296   .1660115   -4.75    0.000    -1.114206    -.463453
+clngdppc_m~n |   3.943276   .3382337   11.66    0.000      3.28035    4.606202
+ ctrade_mean |   .0060188   .0083559    0.72    0.471    -.0103584     .022396
+  _2008_year |   1.630142   1.410967    1.16    0.248    -1.135302    4.395586
+  _2010_year |   3.174284   2.817274    1.13    0.260    -2.347471    8.696039
+  _2012_year |   4.844595   4.224634    1.15    0.251    -3.435535    13.12473
+  _2014_year |     6.3075    5.63263    1.12    0.263    -4.732251    17.34725
+------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------
+   Random-effects Parameters |   Estimate   Std. Err.     [95% Conf. Interval]
+-----------------------------+------------------------------------------------
+Level 2: c_code              |
+                   var(cons) |   9.989089   1.335413      7.371727    12.60645
+-----------------------------+------------------------------------------------
+Level 1: year                |
+                   var(cons) |   .4574582   .0307428      .3972034     .517713
+------------------------------------------------------------------------------
+
+. 
+. estimates store Mod1_REwb
+
+. 
+. outreg2 using output_co2btiwb1, dec(3) excel label alpha(0.001, 0.01, 0.05, 0.1) symbol(***, **, *, ^) addtext(Year FE, 
+> Yes) ctitle(Model 1:REWB) drop(i.year) append
+output_co2btiwb1.xml
+dir : seeout
+
+. 
+. xtreg co2pc dem_stat clngdppc ctrade c_year cpop curban crenew cforest cannexI cisland clatitude i.year if countryname!=
+> "Qatar", fe
+note: cannexI omitted because of collinearity
+note: cisland omitted because of collinearity
+note: clatitude omitted because of collinearity
+note: 2014.year omitted because of collinearity
+
+Fixed-effects (within) regression               Number of obs      =       557
+Group variable: c_code                          Number of groups   =       114
+
+R-sq:  within  = 0.1263                         Obs per group: min =         2
+       between = 0.5139                                        avg =       4.9
+       overall = 0.5037                                        max =         5
+
+                                                F(11,432)          =      5.68
+corr(u_i, Xb)  = -0.1109                        Prob > F           =    0.0000
+
+------------------------------------------------------------------------------
+       co2pc |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+    dem_stat |   .0190291   .0718669     0.26   0.791    -.1222232    .1602814
+    clngdppc |   2.311621     .40783     5.67   0.000     1.510044    3.113199
+      ctrade |   -.003775   .0024799    -1.52   0.129    -.0086492    .0010992
+      c_year |   -.065289   .0191884    -3.40   0.001    -.1030031   -.0275748
+        cpop |   5.78e-10   5.94e-09     0.10   0.923    -1.11e-08    1.23e-08
+      curban |   .0675031   .0309547     2.18   0.030     .0066626    .1283436
+      crenew |  -.0127594   .0104293    -1.22   0.222    -.0332579    .0077391
+     cforest |  -.0147197   .0343204    -0.43   0.668    -.0821754    .0527361
+     cannexI |          0  (omitted)
+     cisland |          0  (omitted)
+   clatitude |          0  (omitted)
+             |
+        year |
+       2008  |   .0502335   .0840518     0.60   0.550    -.1149678    .2154348
+       2010  |   .0198933   .0786757     0.25   0.801    -.1347415    .1745281
+       2012  |   .1102222   .0810445     1.36   0.175    -.0490683    .2695127
+       2014  |          0  (omitted)
+             |
+       _cons |   3.653524   .4291809     8.51   0.000     2.809982    4.497067
+-------------+----------------------------------------------------------------
+     sigma_u |  3.5807036
+     sigma_e |  .67321992
+         rho |  .96585789   (fraction of variance due to u_i)
+------------------------------------------------------------------------------
+F test that all u_i=0:     F(113, 432) =   105.64            Prob > F = 0.0000
+
+. 
+. estimates store Mod2_FE 
+
+. 
+. outreg2 using output_co2btiwb2, dec(3) excel label alpha(0.001, 0.01, 0.05, 0.1) symbol(***, **, *, ^) addtext(Year FE, 
+> Yes) ctitle(Model 2:FE) drop(i.year) append
+output_co2btiwb2.xml
+dir : seeout
+
+. 
+. runmlwin co2pc cons dem_stat clngdppc ctrade c_year cpop curban crenew cforest cannexI cisland clatitude i.year if count
+> ryname!="Qatar", level2(c_code: cons) level1(year: cons) nopause rigls
+ 
+note: 2006b.year omitted because of collinearity
+note: 2014.year omitted because of collinearity
+MLwiN 3.04 multilevel model                     Number of obs      =       557
+Normal response model
+Estimation algorithm: RIGLS
+
+-----------------------------------------------------------
+                |   No. of       Observations per Group
+ Level Variable |   Groups    Minimum    Average    Maximum
+----------------+------------------------------------------
+         c_code |      114          2        4.9          5
+-----------------------------------------------------------
+
+Run time (seconds)        =       1.12
+Number of iterations      =          4
+Log restricted-likelihood = -839.35072
+Restricted-deviance       =  1678.7014
+------------------------------------------------------------------------------
+       co2pc |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+        cons |   4.240697   .5141255    8.25    0.000     3.233029    5.248364
+    dem_stat |  -.0724195   .0671792   -1.08    0.281    -.2040883    .0592493
+    clngdppc |   2.526905   .3305994    7.64    0.000     1.878942    3.174868
+      ctrade |  -.0031637   .0023628   -1.34    0.181    -.0077947    .0014674
+      c_year |  -.0603289   .0138864   -4.34    0.000    -.0875458    -.033112
+        cpop |   3.15e-10   1.83e-09    0.17    0.863    -3.26e-09    3.90e-09
+      curban |    .040033   .0178691    2.24    0.025     .0050102    .0750557
+      crenew |  -.0102893   .0092407   -1.11    0.266    -.0284007    .0078221
+     cforest |  -.0443028   .0154669   -2.86    0.004    -.0746174   -.0139881
+     cannexI |   .3836713   1.152167    0.33    0.739    -1.874535    2.641877
+     cisland |   .9592887   1.322719    0.73    0.468    -1.633193     3.55177
+   clatitude |   .0886047   .4256108    0.21    0.835    -.7455772    .9227865
+  _2008_year |   .0526027   .0836164    0.63    0.529    -.1112825    .2164879
+  _2010_year |   .0251862   .0786613    0.32    0.749    -.1289872    .1793596
+  _2012_year |   .1076457   .0809709    1.33    0.184    -.0510543    .2663457
+------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------
+   Random-effects Parameters |   Estimate   Std. Err.     [95% Conf. Interval]
+-----------------------------+------------------------------------------------
+Level 2: c_code              |
+                   var(cons) |   11.87201   1.577125      8.780901    14.96312
+-----------------------------+------------------------------------------------
+Level 1: year                |
+                   var(cons) |   .4536302   .0305138      .3938243     .513436
+------------------------------------------------------------------------------
+
+. 
+. estimates store Mod2_RE
+
+. 
+. outreg2 using output_co2btiwb2, dec(3) excel label alpha(0.001, 0.01, 0.05, 0.1) symbol(***, **, *, ^) addtext(Year FE, 
+> Yes) ctitle(Model 2:RE) drop(i.year) append
+output_co2btiwb2.xml
+dir : seeout
+
+. 
+. runmlwin co2pc cons dem_statw lngdppcw tradew yearw popw urbanw reneww forestw annexIw islandw latitudew i.year dem_stat
+> _mean clngdppc_mean ctrade_mean cpop_mean curban_mean crenew_mean cforest_mean cannexI_mean cisland_mean clatitude_mean 
+> if countryname!="Qatar", level2(c_code: cons) level1(year: cons) nopause rigls
+ 
+note: annexIw omitted because of collinearity
+note: islandw omitted because of collinearity
+note: 2006b.year omitted because of collinearity
+MLwiN 3.04 multilevel model                     Number of obs      =       557
+Normal response model
+Estimation algorithm: RIGLS
+
+-----------------------------------------------------------
+                |   No. of       Observations per Group
+ Level Variable |   Groups    Minimum    Average    Maximum
+----------------+------------------------------------------
+         c_code |      114          2        4.9          5
+-----------------------------------------------------------
+
+Run time (seconds)        =       1.32
+Number of iterations      =          4
+Log restricted-likelihood = -821.56302
+Restricted-deviance       =   1643.126
+------------------------------------------------------------------------------
+       co2pc |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+        cons |   5.831216   3.203145    1.82    0.069    -.4468324    12.10927
+   dem_statw |   .0189931   .0718687    0.26    0.792    -.1218671    .1598532
+    lngdppcw |   2.311345   .4078402    5.67    0.000     1.511993    3.110697
+      tradew |  -.0037759     .00248   -1.52    0.128    -.0086366    .0010847
+       yearw |  -.6484604   .7008179   -0.93    0.355    -2.022038    .7251175
+        popw |   5.78e-10   5.94e-09    0.10    0.923    -1.11e-08    1.22e-08
+      urbanw |    .067504   .0309555    2.18    0.029     .0068324    .1281756
+      reneww |  -.0127584   .0104296   -1.22    0.221       -.0332    .0076833
+     forestw |  -.0147145   .0343213   -0.43    0.668    -.0819829     .052554
+   latitudew |  -1.02e+07    4680790   -2.19    0.029    -1.94e+07    -1071318
+  _2008_year |     1.2171   1.404029    0.87    0.386    -1.534747    3.968948
+  _2010_year |    2.35288    2.80339    0.84    0.401    -3.141663    7.847422
+  _2012_year |   3.609475   4.203797    0.86    0.391    -4.629815    11.84877
+  _2014_year |   4.665605   5.604845    0.83    0.405    -6.319689     15.6509
+dem_stat_m~n |   -.735043   .1835188   -4.01    0.000    -1.094733   -.3753528
+clngdppc_m~n |   3.700743   .6527058    5.67    0.000     2.421463    4.980023
+ ctrade_mean |    .006492   .0089754    0.72    0.469    -.0110995    .0240836
+   cpop_mean |   2.26e-09   2.33e-09    0.97    0.332    -2.30e-09    6.82e-09
+ curban_mean |   .0365765   .0277421    1.32    0.187     -.017797      .09095
+ crenew_mean |   .0219449   .0195188    1.12    0.261    -.0163112     .060201
+cforest_mean |  -.0374212   .0166178   -2.25    0.024    -.0699916   -.0048508
+cannexI_mean |   1.672579   2.258185    0.74    0.459    -2.753381     6.09854
+cisland_mean |   .2294872   1.246883    0.18    0.854    -2.214358    2.673332
+clatitude_~n |   .3644178   .4115782    0.89    0.376    -.4422607    1.171096
+------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------
+   Random-effects Parameters |   Estimate   Std. Err.     [95% Conf. Interval]
+-----------------------------+------------------------------------------------
+Level 2: c_code              |
+                   var(cons) |   9.415588    1.25745      6.951031    11.88014
+-----------------------------+------------------------------------------------
+Level 1: year                |
+                   var(cons) |   .4532483   .0304637      .3935406     .512956
+------------------------------------------------------------------------------
+
+. 
+. estimates store Mod2_REwb
+
+. 
+. outreg2 using output_co2btiwb2, dec(3) excel label alpha(0.001, 0.01, 0.05, 0.1) symbol(***, **, *, ^) addtext(Year FE, 
+> Yes) ctitle(Model 2:REWB) drop(i.year) append
+output_co2btiwb2.xml
+dir : seeout
+
+. log close
+      name:  <unnamed>
+       log:  C:\Users\Muinul\Google Drive\Muinul\00_DISSERTATION\00_DISSERTATION_final\Supplemental Materials_Original\Log
+>  file_Empirical Analysis_Final Version\Log file_Democracy_BTI_REWB_Oct11,2020.log
+  log type:  text
+ closed on:  12 Oct 2020, 00:18:32
+--------------------------------------------------------------------------------------------------------------------------
